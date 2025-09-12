@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Veeteq Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-16 text-white overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="{{ url_for('static', filename='uploads/placeholder.jpg') }}" alt="About Veeteq Solar" class="w-full h-full object-cover">
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-solar-blue/60 to-solar-green/50"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">About Veeteq Solar</h1>
+        <p class="text-xl max-w-2xl mx-auto drop-shadow-md">Leading the solar revolution with innovative clean energy solutions since 2020</p>
+    </div>
+</section>
+
+<!-- Company Story -->
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div>
+                <div class="text-center lg:text-left mb-8">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Our Story</h2>
+                    <div class="w-20 h-1 bg-gradient-to-r from-solar-blue to-solar-green rounded-full mx-auto lg:mx-0"></div>
+                </div>
+                <div class="space-y-4 text-gray-600">
+                    <p>
+                        Founded in 2020, Veeteq Solar began as a small family business with a big vision: to make clean, renewable energy accessible to everyone. What started as a two-person operation has grown into one of Kenya's most trusted solar installation companies.
+                    </p>
+                    <p>
+                        Over the past few years, we've installed more than 1200 solar systems, helping families and businesses reduce their carbon footprint while saving thousands on energy costs. Our commitment to quality, transparency, and customer satisfaction has made us a leader in the solar industry.
+                    </p>
+                    <p>
+                    Today, we continue to innovate and expand our services, staying at the forefront of solar technology to provide our customers with the most efficient and cost-effective solutions available.
+                </p>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 mt-8">
+                    <div class="bg-white rounded-xl p-4 text-center shadow-lg">
+                        <div class="text-2xl sm:text-3xl font-bold text-solar-orange mb-1">4+</div>
+                        <div class="text-xs sm:text-sm text-gray-600">Years in Business</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center shadow-lg">
+                        <div class="text-2xl sm:text-3xl font-bold text-solar-blue mb-1">1200+</div>
+                        <div class="text-xs sm:text-sm text-gray-600">Installations</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center shadow-lg">
+                        <div class="text-2xl sm:text-3xl font-bold text-solar-green mb-1">98%</div>
+                        <div class="text-xs sm:text-sm text-gray-600">Satisfaction Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="aspect-w-16 aspect-h-12 rounded-lg mb-4 overflow-hidden">
+                    <img src="{{ url_for('static', filename='uploads/solar_install.jpg') }}" alt="Our team installing solar panels" class="w-full h-full object-cover">
+                </div>
+                <p class="text-center text-gray-600 text-sm">Our team installing a residential solar system</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission, Vision, Values -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Our Core Principles</h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-solar-orange to-solar-yellow rounded-full mx-auto mb-4"></div>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">The values that drive everything we do</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 sm:p-8 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-gradient-to-r from-solar-blue to-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-bullseye text-2xl"></i>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4">Our Mission</h3>
+                <p class="text-gray-600 text-sm sm:text-base">To accelerate the adoption of clean energy by providing reliable, affordable, and innovative solar solutions that empower our customers to reduce their environmental impact while saving money.</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 sm:p-8 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-gradient-to-r from-solar-green to-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-eye text-2xl"></i>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4">Our Vision</h3>
+                <p class="text-gray-600 text-sm sm:text-base">To create a sustainable future where clean, renewable energy is the primary power source for homes and businesses, contributing to a healthier planet for future generations.</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 sm:p-8 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-gradient-to-r from-solar-orange to-orange-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-heart text-2xl"></i>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4">Our Values</h3>
+                <p class="text-gray-600 text-sm sm:text-base">Integrity, innovation, sustainability, and customer-first approach guide everything we do. We believe in transparent communication, quality workmanship, and building lasting relationships.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Meet Our Team</h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-solar-green to-solar-blue rounded-full mx-auto mb-4"></div>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">Our experienced professionals are dedicated to providing exceptional solar solutions</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-blue bg-gradient-to-r from-solar-blue to-blue-600 flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='uploads/cedric_sumba.jpg') }}" alt="Cedric Sumba" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
+                        <i class="fas fa-user text-white text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Cedric Sumba</h3>
+                <p class="text-solar-blue font-medium text-sm mb-2">CEO & Founder</p>
+                <p class="text-xs text-gray-600">4+ years in renewable energy</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-green bg-gradient-to-r from-solar-green to-green-600 flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='uploads/grace_wanjiku.jpg') }}" alt="Grace Wanjiku" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
+                        <i class="fas fa-user text-white text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Grace Wanjiku</h3>
+                <p class="text-solar-green font-medium text-sm mb-2">Head of Engineering</p>
+                <p class="text-xs text-gray-600">Expert in system design</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-orange bg-gradient-to-r from-solar-orange to-orange-600 flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='uploads/peter_kamau.jpg') }}" alt="Peter Kamau" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
+                        <i class="fas fa-user text-white text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Peter Kamau</h3>
+                <p class="text-solar-orange font-medium text-sm mb-2">Installation Manager</p>
+                <p class="text-xs text-gray-600">Certified master electrician</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-yellow bg-gradient-to-r from-solar-yellow to-yellow-600 flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='uploads/mary_akinyi.jpg') }}" alt="Mary Akinyi" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
+                        <i class="fas fa-user text-white text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Mary Akinyi</h3>
+                <p class="text-solar-yellow font-medium text-sm mb-2">Customer Success</p>
+                <p class="text-xs text-gray-600">Dedicated to customer satisfaction</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Certifications & Awards -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Certifications & Awards</h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-solar-yellow to-solar-orange rounded-full mx-auto mb-4"></div>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">Recognition for our commitment to excellence and quality</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-gradient-to-r from-solar-yellow to-yellow-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-certificate text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-2">ERB Licensed</h3>
+                <p class="text-sm text-gray-600">Energy Regulatory Board of Kenya</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-gradient-to-r from-solar-blue to-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-award text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-2">Best Solar Company</h3>
+                <p class="text-sm text-gray-600">Kenya Business Awards 2024</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-gradient-to-r from-solar-green to-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-leaf text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-2">Green Business</h3>
+                <p class="text-sm text-gray-600">NEMA Environmental Compliance</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-gradient-to-r from-solar-orange to-orange-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-handshake text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-2">KAM Member</h3>
+                <p class="text-sm text-gray-600">Kenya Association of Manufacturers</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Why Choose Veeteq Solar?</h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-solar-blue to-solar-green rounded-full mx-auto mb-4"></div>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">What sets us apart from other solar companies</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-start">
+                    <div class="bg-gradient-to-r from-solar-blue to-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <i class="fas fa-users text-lg"></i>
+                </div>
+                <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Local Expertise</h3>
+                        <p class="text-gray-600 text-sm">Deep understanding of local regulations, incentives, and weather patterns for optimal system design.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-start">
+                    <div class="bg-gradient-to-r from-solar-green to-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <i class="fas fa-tools text-lg"></i>
+                </div>
+                <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Quality Installation</h3>
+                        <p class="text-gray-600 text-sm">Certified technicians use industry best practices and premium materials for long-lasting installations.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-start">
+                    <div class="bg-gradient-to-r from-solar-orange to-orange-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <i class="fas fa-dollar-sign text-lg"></i>
+                </div>
+                <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Competitive Pricing</h3>
+                        <p class="text-gray-600 text-sm">Fair, transparent pricing with no hidden fees and flexible financing options available.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-start">
+                    <div class="bg-gradient-to-r from-solar-yellow to-yellow-600 text-white w-12 h-12 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <i class="fas fa-headset text-lg"></i>
+                </div>
+                <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Ongoing Support</h3>
+                        <p class="text-gray-600 text-sm">Comprehensive warranty coverage and responsive customer service for the life of your system.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 bg-gradient-to-r from-solar-blue to-solar-green text-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Ready to Join Our Solar Family?</h2>
+        <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto">Experience the Veeteq Solar difference with a free consultation and personalized solar solution.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="{{ url_for('quote') }}" class="w-full sm:w-auto bg-white text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+                <i class="fas fa-calculator mr-2"></i>
+                Get Free Quote
+            </a>
+            <a href="{{ url_for('contact') }}" class="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold transition duration-300 text-center">
+                <i class="fas fa-phone mr-2"></i>
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

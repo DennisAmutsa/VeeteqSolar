@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard - Veeteq Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-solar-blue to-solar-green text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                Welcome back, {{ session.user.first_name or session.user.username }}!
+            </h1>
+            <p class="text-xl max-w-2xl mx-auto">Track your solar projects and manage your account</p>
+        </div>
+    </div>
+</section>
+
+<!-- Dashboard Content -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="bg-solar-blue text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-file-invoice-dollar text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">{{ quotes|length }}</h3>
+                        <p class="text-gray-600">Total Quotes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="bg-solar-green text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-tools text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">{{ installations|length }}</h3>
+                        <p class="text-gray-600">Installations</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="bg-solar-orange text-white w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-dollar-sign text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">
+                            KSh {{ "%.0f"|format(quotes|sum(attribute='estimated_savings') or 0) }}
+                        </h3>
+                        <p class="text-gray-600">Estimated Annual Savings</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <a href="{{ url_for('quote') }}" class="flex items-center p-3 bg-blue-50 rounded-md hover:bg-blue-100 transition duration-300">
+                    <i class="fas fa-calculator text-solar-blue mr-3"></i>
+                    <span class="text-gray-700">Get New Quote</span>
+                </a>
+                <a href="{{ url_for('client_profile') }}" class="flex items-center p-3 bg-green-50 rounded-md hover:bg-green-100 transition duration-300">
+                    <i class="fas fa-user-edit text-solar-green mr-3"></i>
+                    <span class="text-gray-700">Update Profile</span>
+                </a>
+                <a href="{{ url_for('contact') }}" class="flex items-center p-3 bg-orange-50 rounded-md hover:bg-orange-100 transition duration-300">
+                    <i class="fas fa-phone text-solar-orange mr-3"></i>
+                    <span class="text-gray-700">Contact Support</span>
+                </a>
+                <a href="{{ url_for('portfolio') }}" class="flex items-center p-3 bg-yellow-50 rounded-md hover:bg-yellow-100 transition duration-300">
+                    <i class="fas fa-images text-solar-yellow mr-3"></i>
+                    <span class="text-gray-700">View Gallery</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- My Quotes -->
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">My Solar Quotes</h3>
+                </div>
+                <div class="p-6">
+                    {% if quotes %}
+                        <div class="space-y-4">
+                            {% for quote in quotes[:5] %}
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <span class="bg-solar-blue text-white text-xs px-2 py-1 rounded-full">
+                                            Quote #{{ quote.id }}
+                                        </span>
+                                        <span class="ml-2 text-sm text-gray-600">
+                                            {{ quote.created_at.strftime('%b %d, %Y') if quote.created_at else 'N/A' }}
+                                        </span>
+                                    </div>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                        {% if quote.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                        {% elif quote.status == 'approved' %}bg-green-100 text-green-800
+                                        {% elif quote.status == 'rejected' %}bg-red-100 text-red-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ quote.status.title() if quote.status else 'Pending' }}
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <span class="text-gray-500">System Size:</span>
+                                        <span class="font-medium ml-1">{{ quote.system_size or 0 }} kW</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Estimated Cost:</span>
+                                        <span class="font-medium ml-1">KSh {{ "%.0f"|format(quote.estimated_cost or 0) }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Property:</span>
+                                        <span class="font-medium ml-1">{{ quote.property_type.title() if quote.property_type else 'N/A' }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Annual Savings:</span>
+                                        <span class="font-medium ml-1 text-green-600">KSh {{ "%.0f"|format(quote.estimated_savings or 0) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if quotes|length > 5 %}
+                        <div class="mt-4 text-center">
+                            <a href="{{ url_for('quote') }}" class="text-solar-blue hover:underline text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i>View All Quotes ({{ quotes|length }})
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-8">
+                            <i class="fas fa-file-invoice-dollar text-4xl text-gray-300 mb-4"></i>
+                            <h4 class="text-lg font-medium text-gray-600 mb-2">No quotes yet</h4>
+                            <p class="text-gray-500 mb-4">Get started by requesting your first solar quote</p>
+                            <a href="{{ url_for('quote') }}" class="bg-solar-blue text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                                Get Quote
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- My Installations -->
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">My Solar Installations</h3>
+                </div>
+                <div class="p-6">
+                    {% if installations %}
+                        <div class="space-y-4">
+                            {% for installation in installations %}
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <span class="bg-solar-green text-white text-xs px-2 py-1 rounded-full">
+                                            Install #{{ installation.id }}
+                                        </span>
+                                        <span class="ml-2 text-sm text-gray-600">
+                                            {% if installation.installation_date %}
+                                                {{ installation.installation_date.strftime('%b %d, %Y') }}
+                                            {% else %}
+                                                TBD
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                        {% if installation.status == 'scheduled' %}bg-blue-100 text-blue-800
+                                        {% elif installation.status == 'in_progress' %}bg-yellow-100 text-yellow-800
+                                        {% elif installation.status == 'completed' %}bg-green-100 text-green-800
+                                        {% elif installation.status == 'cancelled' %}bg-red-100 text-red-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ installation.status.replace('_', ' ').title() if installation.status else 'Scheduled' }}
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <span class="text-gray-500">System Size:</span>
+                                        <span class="font-medium ml-1">{{ installation.system_size or 0 }} kW</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Total Cost:</span>
+                                        <span class="font-medium ml-1">KSh {{ "%.0f"|format(installation.total_cost or 0) }}</span>
+                                    </div>
+                                    {% if installation.technician %}
+                                    <div class="col-span-2">
+                                        <span class="text-gray-500">Technician:</span>
+                                        <span class="font-medium ml-1">{{ installation.technician }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if installations|length > 3 %}
+                        <div class="mt-4 text-center">
+                            <a href="{{ url_for('contact') }}" class="text-solar-green hover:underline text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i>View All Installations ({{ installations|length }})
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-8">
+                            <i class="fas fa-tools text-4xl text-gray-300 mb-4"></i>
+                            <h4 class="text-lg font-medium text-gray-600 mb-2">No installations yet</h4>
+                            <p class="text-gray-500 mb-4">Your installations will appear here once scheduled</p>
+                            <a href="{{ url_for('contact') }}" class="bg-solar-green text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300">
+                                Contact Us
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Information -->
+        <div class="mt-8 bg-white rounded-lg shadow-md">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Account Information</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-2">Contact Details</h4>
+                        <div class="space-y-2">
+                            <p class="text-gray-900">
+                                <i class="fas fa-user mr-2 text-gray-400"></i>
+                                {{ session.user.first_name or session.user.username }} {{ session.user.last_name or '' }}
+                            </p>
+                            <p class="text-gray-900">
+                                <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                                {{ session.user.email }}
+                            </p>
+                            <p class="text-gray-900">
+                                <i class="fas fa-user-tag mr-2 text-gray-400"></i>
+                                @{{ session.user.username }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-2">Quick Links</h4>
+                        <div class="space-y-2">
+                            <a href="{{ url_for('client_profile') }}" class="flex items-center text-solar-blue hover:underline">
+                                <i class="fas fa-edit mr-2"></i>
+                                Update Profile
+                            </a>
+                            <a href="{{ url_for('quote') }}" class="flex items-center text-solar-blue hover:underline">
+                                <i class="fas fa-calculator mr-2"></i>
+                                Request New Quote
+                            </a>
+                            <a href="{{ url_for('contact') }}" class="flex items-center text-solar-blue hover:underline">
+                                <i class="fas fa-phone mr-2"></i>
+                                Contact Support
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showAllQuotes() {
+    // Get all quote elements
+    const allQuotes = document.querySelectorAll('.border.border-gray-200.rounded-lg.p-4');
+    
+    // Show all quotes (remove any hidden class if it exists)
+    allQuotes.forEach(quote => {
+        quote.style.display = 'block';
+    });
+    
+    // Hide the "View All" button
+    const viewAllBtn = document.querySelector('button[onclick="showAllQuotes()"]');
+    if (viewAllBtn) {
+        viewAllBtn.style.display = 'none';
+    }
+    
+    // Add a "Show Less" button
+    const showLessBtn = document.createElement('button');
+    showLessBtn.className = 'text-solar-blue hover:underline text-sm font-medium mt-2';
+    showLessBtn.innerHTML = '<i class="fas fa-chevron-up mr-1"></i>Show Less';
+    showLessBtn.onclick = function() {
+        // Show only first 5 quotes
+        allQuotes.forEach((quote, index) => {
+            if (index >= 5) {
+                quote.style.display = 'none';
+            }
+        });
+        
+        // Show "View All" button again
+        if (viewAllBtn) {
+            viewAllBtn.style.display = 'inline-block';
+        }
+        
+        // Remove "Show Less" button
+        showLessBtn.remove();
+    };
+    
+    // Add the "Show Less" button after the quotes
+    const quotesContainer = document.querySelector('.space-y-4');
+    if (quotesContainer) {
+        quotesContainer.parentNode.appendChild(showLessBtn);
+    }
+}
+
+function showAllInstallations() {
+    // Get all installation elements
+    const allInstallations = document.querySelectorAll('.border.border-gray-200.rounded-lg.p-4');
+    
+    // Show all installations (remove any hidden class if it exists)
+    allInstallations.forEach(installation => {
+        installation.style.display = 'block';
+    });
+    
+    // Hide the "View All" button
+    const viewAllBtn = document.querySelector('button[onclick="showAllInstallations()"]');
+    if (viewAllBtn) {
+        viewAllBtn.style.display = 'none';
+    }
+    
+    // Add a "Show Less" button
+    const showLessBtn = document.createElement('button');
+    showLessBtn.className = 'text-solar-green hover:underline text-sm font-medium mt-2';
+    showLessBtn.innerHTML = '<i class="fas fa-chevron-up mr-1"></i>Show Less';
+    showLessBtn.onclick = function() {
+        // Show only first 3 installations
+        allInstallations.forEach((installation, index) => {
+            if (index >= 3) {
+                installation.style.display = 'none';
+            }
+        });
+        
+        // Show "View All" button again
+        if (viewAllBtn) {
+            viewAllBtn.style.display = 'inline-block';
+        }
+        
+        // Remove "Show Less" button
+        showLessBtn.remove();
+    };
+    
+    // Add the "Show Less" button after the installations
+    const installationsContainer = document.querySelector('.space-y-4');
+    if (installationsContainer) {
+        installationsContainer.parentNode.appendChild(showLessBtn);
+    }
+}
+</script>
+{% endblock %}
+
+

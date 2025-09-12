@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ company_name }} - Clean Energy Solutions{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ url_for('favicon') }}">
+    <link rel="shortcut icon" type="image/jpeg" href="{{ url_for('favicon') }}">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308',
+                        'solar-emerald': '#10b981',
+                        'solar-teal': '#14b8a6',
+                        'solar-lime': '#84cc16',
+                        'solar-forest': '#166534'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100 fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ url_for('home') }}" class="flex items-center group logo-container">
+                        <div class="bg-gradient-to-r from-solar-orange to-orange-600 p-2 rounded-lg mr-3 group-hover:scale-110 transition-transform duration-300 logo-icon">
+                            <i class="fas fa-solar-panel text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold bg-gradient-to-r from-solar-blue to-blue-600 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-solar-blue transition-all duration-300">Veeteq Solar</span>
+                    </a>
+                </div>
+                
+                {% if session.user and session.user.role == 'admin' %}
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="{{ url_for('admin_dashboard') }}" class="nav-link px-4 py-2 text-gray-700 hover:text-solar-green hover:bg-green-50 rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-tachometer-alt mr-2 text-sm"></i>Dashboard
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-green to-green-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('admin_customers') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-blue hover:bg-blue-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-users mr-2 text-sm"></i>Client Users
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-blue to-blue-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('admin_quotes') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-orange hover:bg-orange-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-file-invoice-dollar mr-2 text-sm"></i>Quote Requests
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-orange to-orange-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="#" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-yellow hover:bg-yellow-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-tools mr-2 text-sm"></i>Installations
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-yellow to-yellow-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('portfolio') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-green hover:bg-green-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-images mr-2 text-sm"></i>Portfolio Gallery
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-green to-green-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('admin_products') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-orange hover:bg-orange-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-box mr-2 text-sm"></i>Products
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-orange to-orange-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="#" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-blue hover:bg-blue-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-chart-bar mr-2 text-sm"></i>Analytics
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-blue to-blue-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="#" class="nav-link px-4 py-2 text-gray-700  hover:text-gray-600 hover:bg-gray-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-cog mr-2 text-sm"></i>Settings
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-gray-600 to-gray-700 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="ml-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+                {% elif not session.user %}
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="{{ url_for('home') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-blue hover:bg-blue-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-home mr-2 text-sm"></i>Home
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-blue to-blue-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('services') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-green hover:bg-green-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-cogs mr-2 text-sm"></i>Services
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-green to-green-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('products') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-orange hover:bg-orange-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-box mr-2 text-sm"></i>Products
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-orange to-orange-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('quote') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-yellow hover:bg-yellow-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-calculator mr-2 text-sm"></i>Get Quote
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-yellow to-yellow-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('portfolio') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-blue hover:bg-blue-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-images mr-2 text-sm"></i>Portfolio
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-blue to-blue-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('about') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-green hover:bg-green-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-info-circle mr-2 text-sm"></i>About
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-green to-green-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-orange hover:bg-orange-50  rounded-lg transition-all duration-300 font-medium relative group">
+                        <i class="fas fa-envelope mr-2 text-sm"></i>Contact
+                        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-solar-orange to-orange-600 group-hover:w-3/4 transition-all duration-300"></div>
+                    </a>
+                    <a href="{{ url_for('login') }}" class="ml-4 bg-gradient-to-r from-solar-orange to-orange-600 text-white px-6 py-2 rounded-lg hover:from-orange-600 hover:to-solar-orange transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
+                        <i class="fas fa-user mr-2"></i>Client Portal
+                    </a>
+                </div>
+                {% endif %}
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center space-x-2">
+                    {% if session.user %}
+                    <button id="sidebar-toggle" class="text-gray-700 hover:text-solar-blue">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    {% else %}
+                    <button class="mobile-menu-btn text-gray-700 hover:text-solar-blue">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu for non-logged-in users -->
+        {% if not session.user %}
+        <div class="mobile-menu hidden md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg">
+            <div class="px-4 pt-3 pb-4 space-y-2">
+                <a href="{{ url_for('home') }}" class="flex items-center px-4 py-3 text-gray-700 hover:text-solar-blue hover:bg-blue-50 rounded-lg transition-all duration-300 font-medium group">
+                    <i class="fas fa-home mr-3 text-solar-blue group-hover:scale-110 transition-transform duration-300"></i>Home
+                </a>
+                <a href="{{ url_for('services') }}" class="flex items-center px-4 py-3 text-gray-700 hover:text-solar-green hover:bg-green-50 rounded-lg transition-all duration-300 font-medium group">
+                    <i class="fas fa-cogs mr-3 text-solar-green group-hover:scale-110 transition-transform duration-300"></i>Services
+                </a>
+                <a href="{{ url_for('products') }}" class="flex items-center px-4 py-3 text-gray-700 hover:text-solar-orange hover:bg-orange-50 rounded-lg transition-all duration-300 font-medium group">
+                    <i class="fas fa-box mr-3 text-solar-orange group-hover:scale-110 transition-transform duration-300"></i>Products
+                </a>
+                <a href="{{ url_for('quote') }}" class="flex items-center px-4 py-3 text-gray-700 hover:text-solar-yellow hover:bg-yellow-50 rounded-lg transition-all duration-300 font-medium group">
+                    <i class="fas fa-calculator mr-3 text-solar-yellow group-hover:scale-110 transition-transform duration-300"></i>Get Quote
+                </a>
+                <a href="{{ url_for('portfolio') }}" class="flex items-center px-4 py-3 text-gray-700 hover:text-solar-blue hover:bg-blue-50 rounded-lg transition-all duration-300 font-medium group">
+                    <i class="fas fa-images mr-3 text-solar-blue group-hover:scale-110 transition-transform duration-300"></i>Portfolio
+                </a>
+                <a href="{{ url_for('about') }}" class="flex items-center px-4 py-3 text-gray-700 hover:text-solar-green hover:bg-green-50 rounded-lg transition-all duration-300 font-medium group">
+                    <i class="fas fa-info-circle mr-3 text-solar-green group-hover:scale-110 transition-transform duration-300"></i>About
+                </a>
+                <a href="{{ url_for('contact') }}" class="flex items-center px-4 py-3 text-gray-700 hover:text-solar-orange hover:bg-orange-50 rounded-lg transition-all duration-300 font-medium group">
+                    <i class="fas fa-envelope mr-3 text-solar-orange group-hover:scale-110 transition-transform duration-300"></i>Contact
+                </a>
+                <div class="pt-2 border-t border-gray-100">
+                    <a href="{{ url_for('login') }}" class="flex items-center justify-center px-4 py-3 bg-gradient-to-r from-solar-orange to-orange-600 text-white hover:from-orange-600 hover:to-solar-orange rounded-lg transition-all duration-300 font-semibold shadow-lg">
+                        <i class="fas fa-user mr-2"></i>Client Portal
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="fixed top-16 right-4 z-50 space-y-2">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} bg-{% if category == 'error' %}red{% else %}green{% endif %}-500 text-white px-4 py-2 rounded-md shadow-lg">
+                        {{ message }}
+                        <button class="ml-2 text-white hover:text-gray-200" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="pt-16 {% if session.user %}md:pl-64{% endif %}">
+        <!-- Sidebar for logged-in users -->
+        {% if session.user %}
+        <div id="client-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out pt-16 md:translate-x-0 -translate-x-full">
+            <div class="flex flex-col h-full">
+                <!-- User Profile Section -->
+                <div class="px-4 py-6 border-b border-gray-200">
+                    <div class="flex items-center">
+                        <div class="bg-solar-blue text-white w-12 h-12 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-semibold">
+                                {{ (session.user.first_name[0] + session.user.last_name[0]) if session.user.first_name and session.user.last_name else session.user.username[0] }}
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">
+                                {{ session.user.first_name + ' ' + session.user.last_name if session.user.first_name and session.user.last_name else session.user.username }}
+                            </p>
+                            <p class="text-xs text-gray-500">{{ session.user.email }}</p>
+                            <p class="text-xs text-solar-blue font-medium">{{ session.user.role.title() }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="flex-1 px-4 py-4 space-y-2">
+                    <!-- Main Navigation -->
+                    <div class="mb-4">
+                        <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Navigation</p>
+                        
+                        <a href="{{ url_for('home') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-home mr-3 text-gray-400"></i>
+                            Home
+                        </a>
+                        
+                        <a href="{{ url_for('services') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-solar-panel mr-3 text-gray-400"></i>
+                            Services
+                        </a>
+                        
+                        <a href="{{ url_for('products') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-box mr-3 text-gray-400"></i>
+                            Products
+                        </a>
+                        
+                        <a href="{{ url_for('quote') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-calculator mr-3 text-gray-400"></i>
+                            Get Quote
+                        </a>
+                        
+                        <a href="{{ url_for('portfolio') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-images mr-3 text-gray-400"></i>
+                            Portfolio
+                        </a>
+                        
+                        <a href="{{ url_for('about') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-info-circle mr-3 text-gray-400"></i>
+                            About
+                        </a>
+                        
+                        <a href="{{ url_for('contact') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-phone mr-3 text-gray-400"></i>
+                            Contact
+                        </a>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 my-4"></div>
+                    
+                    <!-- My Account -->
+                    <div class="mb-4">
+                        <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">My Account</p>
+                        
+                        {% if session.user.role == 'admin' %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-tachometer-alt mr-3 text-gray-400"></i>
+                            Admin Dashboard
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('client_dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-tachometer-alt mr-3 text-gray-400"></i>
+                            Dashboard
+                        </a>
+                        {% endif %}
+                        
+                        <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-file-invoice-dollar mr-3 text-gray-400"></i>
+                            My Quotes
+                        </a>
+                        
+                        <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-tools mr-3 text-gray-400"></i>
+                            My Installations
+                        </a>
+                        
+                        {% if session.user.role == 'client' %}
+                        <a href="{{ url_for('client_profile') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                            <i class="fas fa-user-edit mr-3 text-gray-400"></i>
+                            Profile Settings
+                        </a>
+                        {% endif %}
+                    </div>
+                </nav>
+
+                <!-- Logout Section -->
+                <div class="px-4 py-4 border-t border-gray-200">
+                    <a href="{{ url_for('logout') }}" class="flex items-center px-3 py-2 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <!-- Brand & Description -->
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-orange text-xl mr-2"></i>
+                        <span class="text-lg font-bold">Veeteq Solar</span>
+                    </div>
+                    <p class="text-gray-300 text-sm hidden sm:block">Leading solar energy solutions provider</p>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="flex items-center space-x-6 text-sm">
+                    <div class="flex items-center text-gray-300">
+                        <i class="fas fa-phone mr-1"></i>
+                        <span>0720426780</span>
+                    </div>
+                    <div class="flex items-center text-gray-300">
+                        <i class="fas fa-envelope mr-1"></i>
+                        <span>veeteqsolar@gmail.com</span>
+                    </div>
+                </div>
+                
+                <!-- Social Media -->
+                <div class="flex space-x-3">
+                    <a href="https://facebook.com/veeteqsolar" target="_blank" class="text-gray-300 hover:text-white text-sm"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/veeteqsolar" target="_blank" class="text-gray-300 hover:text-white text-sm"><i class="fab fa-twitter"></i></a>
+                    <a href="https://linkedin.com/company/veeteqsolar" target="_blank" class="text-gray-300 hover:text-white text-sm"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://instagram.com/veeteqsolar" target="_blank" class="text-gray-300 hover:text-white text-sm"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@veeteq.solar" target="_blank" class="text-gray-300 hover:text-white text-sm"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-4 pt-4 text-center text-gray-300 text-sm">
+                <p>&copy; 2025 Veeteq Solar. All rights reserved.</p>
+                <p class="mt-1">
+                    Designed by 
+                    <a href="https://epicedgecreative.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-solar-orange hover:text-solar-yellow transition-colors duration-300 font-medium">
+                        EpicEdge Creative
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% if session.user %}
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('client-sidebar');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('-translate-x-full');
+                });
+                
+                // Close sidebar when clicking outside on mobile
+                document.addEventListener('click', function(event) {
+                    if (window.innerWidth < 768) { // Mobile only
+                        if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                            sidebar.classList.add('-translate-x-full');
+                        }
+                    }
+                });
+            }
+        });
+        
+    </script>
+    {% endif %}
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

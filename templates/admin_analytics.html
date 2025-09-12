@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Veeteq Solar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308',
+                        'solar-emerald': '#10b981',
+                        'solar-teal': '#14b8a6',
+                        'solar-lime': '#84cc16',
+                        'solar-forest': '#166534'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-solar-emerald-50 to-solar-teal-50 min-h-screen overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b-4 border-solar-emerald">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-14 sm:h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-emerald text-lg sm:text-xl lg:text-2xl mr-2 sm:mr-3 animate-pulse"></i>
+                        <span class="text-sm sm:text-lg lg:text-xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Veeteq Solar Admin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
+                    <a href="{{ url_for('admin_dashboard') }}" class="text-solar-emerald hover:text-solar-forest transition duration-300 font-medium text-xs sm:text-sm lg:text-base">
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        <span class="hidden sm:inline">Back to Dashboard</span>
+                        <span class="sm:hidden">Back</span>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition duration-300 shadow-md text-xs sm:text-sm lg:text-base">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        <span class="hidden lg:inline">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto py-4 sm:py-6 lg:py-8 px-4 sm:px-6 lg:px-8">
+        <div class="mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Analytics Dashboard</h1>
+            <p class="text-solar-forest mt-2 text-sm sm:text-base lg:text-lg">📊 Business insights and performance metrics</p>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-emerald hover:shadow-2xl transition duration-300">
+                <div class="p-4 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-gradient-to-r from-solar-emerald to-solar-teal text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg">
+                                <i class="fas fa-users text-lg sm:text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 sm:ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Total Clients</dt>
+                                <dd class="text-2xl sm:text-3xl font-bold text-solar-emerald">{{ analytics.total_clients or 0 }}</dd>
+                                <dd class="text-xs text-gray-500">Registered customers</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-lime hover:shadow-2xl transition duration-300">
+                <div class="p-4 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-gradient-to-r from-solar-lime to-solar-emerald text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg">
+                                <i class="fas fa-file-invoice-dollar text-lg sm:text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 sm:ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Total Quotes</dt>
+                                <dd class="text-2xl sm:text-3xl font-bold text-solar-lime">{{ analytics.total_quotes or 0 }}</dd>
+                                <dd class="text-xs text-gray-500">{{ analytics.pending_quotes or 0 }} pending</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-teal hover:shadow-2xl transition duration-300">
+                <div class="p-4 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-gradient-to-r from-solar-teal to-solar-emerald text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg">
+                                <i class="fas fa-solar-panel text-lg sm:text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 sm:ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Installations</dt>
+                                <dd class="text-2xl sm:text-3xl font-bold text-solar-teal">{{ analytics.total_installations or 0 }}</dd>
+                                <dd class="text-xs text-gray-500">{{ analytics.completed_installations or 0 }} completed</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-yellow hover:shadow-2xl transition duration-300">
+                <div class="p-4 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-gradient-to-r from-solar-yellow to-solar-lime text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg">
+                                <i class="fas fa-dollar-sign text-lg sm:text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 sm:ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Total Revenue</dt>
+                                <dd class="text-2xl sm:text-3xl font-bold text-solar-yellow">KSh {{ "%.0f"|format(analytics.total_revenue or 0) }}</dd>
+                                <dd class="text-xs text-gray-500">From completed projects</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
+            <!-- Quote Status Chart -->
+            <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-emerald">
+                <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-solar-emerald-100">
+                    <h3 class="text-base sm:text-lg font-medium text-solar-forest flex items-center">
+                        <i class="fas fa-chart-pie text-solar-emerald mr-2"></i>
+                        Quote Status Distribution
+                    </h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <canvas id="quoteStatusChart" width="400" height="200" class="w-full h-auto max-h-64"></canvas>
+                </div>
+            </div>
+
+            <!-- Installation Status Chart -->
+            <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-lime">
+                <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-solar-lime-100">
+                    <h3 class="text-base sm:text-lg font-medium text-solar-forest flex items-center">
+                        <i class="fas fa-chart-bar text-solar-lime mr-2"></i>
+                        Installation Status
+                    </h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <canvas id="installationStatusChart" width="400" height="200" class="w-full h-auto max-h-64"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Analytics -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
+            <!-- Revenue Summary -->
+            <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-teal">
+                <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-solar-teal-100">
+                    <h3 class="text-base sm:text-lg font-medium text-solar-forest flex items-center">
+                        <i class="fas fa-chart-line text-solar-teal mr-2"></i>
+                        Revenue Summary
+                    </h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div class="space-y-3 sm:space-y-4">
+                        <div class="flex justify-between items-center p-3 sm:p-4 bg-solar-emerald-50 rounded-lg">
+                            <div>
+                                <p class="text-xs sm:text-sm font-medium text-solar-forest">Completed Revenue</p>
+                                <p class="text-xs text-gray-500">From finished installations</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg sm:text-xl lg:text-2xl font-bold text-solar-emerald">KSh {{ "%.0f"|format(analytics.total_revenue or 0) }}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center p-3 sm:p-4 bg-solar-lime-50 rounded-lg">
+                            <div>
+                                <p class="text-xs sm:text-sm font-medium text-solar-forest">Potential Revenue</p>
+                                <p class="text-xs text-gray-500">From approved quotes</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg sm:text-xl lg:text-2xl font-bold text-solar-lime">KSh {{ "%.0f"|format(analytics.potential_revenue or 0) }}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center p-3 sm:p-4 bg-solar-yellow-50 rounded-lg">
+                            <div>
+                                <p class="text-xs sm:text-sm font-medium text-solar-forest">Conversion Rate</p>
+                                <p class="text-xs text-gray-500">Quotes to installations</p>
+                            </div>
+                            <div class="text-right">
+                                {% set conversion_rate = ((analytics.total_installations or 0) / (analytics.total_quotes or 1)) * 100 %}
+                                <p class="text-lg sm:text-xl lg:text-2xl font-bold text-solar-yellow">{{ "{:.1f}".format(conversion_rate) }}%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Stats -->
+            <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-yellow">
+                <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-solar-yellow-100">
+                    <h3 class="text-base sm:text-lg font-medium text-solar-forest flex items-center">
+                        <i class="fas fa-images text-solar-yellow mr-2"></i>
+                        Portfolio & Content
+                    </h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div class="space-y-3 sm:space-y-4">
+                        <div class="flex justify-between items-center p-3 sm:p-4 bg-solar-emerald-50 rounded-lg">
+                            <div>
+                                <p class="text-xs sm:text-sm font-medium text-solar-forest">Portfolio Items</p>
+                                <p class="text-xs text-gray-500">Showcase projects</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg sm:text-xl lg:text-2xl font-bold text-solar-emerald">{{ analytics.portfolio_items or 0 }}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center p-3 sm:p-4 bg-solar-lime-50 rounded-lg">
+                            <div>
+                                <p class="text-xs sm:text-sm font-medium text-solar-forest">Scheduled Installations</p>
+                                <p class="text-xs text-gray-500">Upcoming projects</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg sm:text-xl lg:text-2xl font-bold text-solar-lime">{{ analytics.scheduled_installations or 0 }}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center p-3 sm:p-4 bg-solar-teal-50 rounded-lg">
+                            <div>
+                                <p class="text-xs sm:text-sm font-medium text-solar-forest">Approved Quotes</p>
+                                <p class="text-xs text-gray-500">Ready for scheduling</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg sm:text-xl lg:text-2xl font-bold text-solar-teal">{{ analytics.approved_quotes or 0 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Trends -->
+        <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-emerald">
+            <div class="px-6 py-4 border-b border-solar-emerald-100">
+                <h3 class="text-lg font-medium text-solar-forest flex items-center">
+                    <i class="fas fa-chart-area text-solar-emerald mr-2"></i>
+                    Monthly Trends (Last 12 Months)
+                </h3>
+            </div>
+            <div class="p-6">
+                <canvas id="monthlyTrendsChart" width="800" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quote Status Chart
+        const quoteStatusCtx = document.getElementById('quoteStatusChart').getContext('2d');
+        new Chart(quoteStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'Approved', 'Rejected'],
+                datasets: [{
+                    data: [
+                        {{ analytics.pending_quotes or 0 }},
+                        {{ analytics.approved_quotes or 0 }},
+                        {{ (analytics.total_quotes or 0) - (analytics.pending_quotes or 0) - (analytics.approved_quotes or 0) }}
+                    ],
+                    backgroundColor: [
+                        '#fbbf24', // solar-yellow
+                        '#10b981', // solar-emerald
+                        '#ef4444'  // red
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Installation Status Chart
+        const installationStatusCtx = document.getElementById('installationStatusChart').getContext('2d');
+        new Chart(installationStatusCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Scheduled', 'In Progress', 'Completed'],
+                datasets: [{
+                    label: 'Installations',
+                    data: [
+                        {{ analytics.scheduled_installations or 0 }},
+                        {{ (analytics.total_installations or 0) - (analytics.completed_installations or 0) - (analytics.scheduled_installations or 0) }},
+                        {{ analytics.completed_installations or 0 }}
+                    ],
+                    backgroundColor: [
+                        '#14b8a6', // solar-teal
+                        '#f59e0b', // amber
+                        '#10b981'  // solar-emerald
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Monthly Trends Chart
+        const monthlyTrendsCtx = document.getElementById('monthlyTrendsChart').getContext('2d');
+        const monthlyData = {
+            {% if analytics.monthly_quotes %}
+            quotes: {{ analytics.monthly_quotes | tojson }},
+            {% else %}
+            quotes: [],
+            {% endif %}
+            {% if analytics.monthly_installations %}
+            installations: {{ analytics.monthly_installations | tojson }}
+            {% else %}
+            installations: []
+            {% endif %}
+        };
+
+        // Process monthly data
+        const months = [];
+        const quoteCounts = [];
+        const installationCounts = [];
+
+        // Create a map of all months from both datasets
+        const allMonths = new Set();
+        monthlyData.quotes.forEach(item => allMonths.add(item.month));
+        monthlyData.installations.forEach(item => allMonths.add(item.month));
+
+        // Sort months and create arrays
+        Array.from(allMonths).sort().forEach(month => {
+            months.push(month);
+            const quoteItem = monthlyData.quotes.find(q => q.month === month);
+            const installationItem = monthlyData.installations.find(i => i.month === month);
+            quoteCounts.push(quoteItem ? quoteItem.count : 0);
+            installationCounts.push(installationItem ? installationItem.count : 0);
+        });
+
+        new Chart(monthlyTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Quotes',
+                    data: quoteCounts,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Installations',
+                    data: installationCounts,
+                    borderColor: '#14b8a6',
+                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

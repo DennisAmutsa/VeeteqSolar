@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Quote - Veeteq Solar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-orange text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-solar-blue">Veeteq Solar Admin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('admin_quotes') }}" class="text-gray-700 hover:text-solar-blue">
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        Back to Quotes
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <!-- Header -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Edit Quote #{{ quote.id }}</h1>
+            <p class="text-gray-600 mt-2">Update quote information and status</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-md {% if category == 'success' %}bg-green-100 text-green-700 border border-green-200{% elif category == 'error' %}bg-red-100 text-red-700 border border-red-200{% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                {% if category == 'success' %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% elif category == 'error' %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                {% else %}
+                                    <i class="fas fa-info-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Edit Form -->
+        <form method="POST" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- System Information -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-solar-panel mr-2 text-solar-orange"></i>
+                        System Information
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="property_type" class="block text-sm font-medium text-gray-700">Property Type</label>
+                            <select id="property_type" name="property_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue">
+                                <option value="residential" {% if quote.property_type == 'residential' %}selected{% endif %}>Residential</option>
+                                <option value="commercial" {% if quote.property_type == 'commercial' %}selected{% endif %}>Commercial</option>
+                                <option value="industrial" {% if quote.property_type == 'industrial' %}selected{% endif %}>Industrial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="roof_size" class="block text-sm font-medium text-gray-700">Roof Size (sq ft)</label>
+                            <input type="number" id="roof_size" name="roof_size" value="{{ quote.roof_size or 0 }}" 
+                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue" 
+                                   step="0.01" min="0">
+                        </div>
+                        <div>
+                            <label for="energy_usage" class="block text-sm font-medium text-gray-700">Energy Usage (kWh/month)</label>
+                            <input type="number" id="energy_usage" name="energy_usage" value="{{ quote.energy_usage or 0 }}" 
+                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue" 
+                                   step="0.01" min="0">
+                        </div>
+                        <div>
+                            <label for="system_size" class="block text-sm font-medium text-gray-700">System Size (kW)</label>
+                            <input type="number" id="system_size" name="system_size" value="{{ quote.system_size or 0 }}" 
+                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue" 
+                                   step="0.01" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Information -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-dollar-sign mr-2 text-solar-green"></i>
+                        Financial Information
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="estimated_cost" class="block text-sm font-medium text-gray-700">Estimated Cost (KSh)</label>
+                            <input type="number" id="estimated_cost" name="estimated_cost" value="{{ quote.estimated_cost or 0 }}" 
+                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue" 
+                                   step="1" min="0">
+                        </div>
+                        <div>
+                            <label for="estimated_savings" class="block text-sm font-medium text-gray-700">Annual Savings (KSh)</label>
+                            <input type="number" id="estimated_savings" name="estimated_savings" value="{{ quote.estimated_savings or 0 }}" 
+                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue" 
+                                   step="1" min="0">
+                        </div>
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                            <select id="status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue">
+                                <option value="pending" {% if quote.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="approved" {% if quote.status == 'approved' %}selected{% endif %}>Approved</option>
+                                <option value="rejected" {% if quote.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-sticky-note mr-2 text-solar-yellow"></i>
+                    Notes
+                </h2>
+                <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-700">Additional Notes</label>
+                    <textarea id="notes" name="notes" rows="4" 
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-solar-blue focus:border-solar-blue"
+                              placeholder="Add any additional notes about this quote...">{{ quote.notes or '' }}</textarea>
+                </div>
+            </div>
+
+            <!-- Customer Information (Read-only) -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-user mr-2 text-solar-blue"></i>
+                    Customer Information (Read-only)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Name</label>
+                        <p class="text-gray-900">
+                            {% if quote.first_name and quote.last_name %}
+                                {{ quote.first_name }} {{ quote.last_name }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Email</label>
+                        <p class="text-gray-900">{{ quote.email or 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Phone</label>
+                        <p class="text-gray-900">{{ quote.phone or 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Address</label>
+                        <p class="text-gray-900">
+                            {% if quote.address %}
+                                {{ quote.address }}
+                                {% if quote.city %}, {{ quote.city }}{% endif %}
+                                {% if quote.state %}, {{ quote.state }}{% endif %}
+                                {% if quote.zip_code %} {{ quote.zip_code }}{% endif %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Save Changes</h3>
+                        <p class="text-gray-600">Update the quote information</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <a href="{{ url_for('admin_view_quote', quote_id=quote.id) }}" 
+                           class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-300">
+                            <i class="fas fa-eye mr-2"></i>
+                            View Quote
+                        </a>
+                        <button type="submit" class="bg-solar-blue text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                            <i class="fas fa-save mr-2"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

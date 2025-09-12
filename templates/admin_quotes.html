@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Management - Veeteq Solar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-14 sm:h-16">
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button id="mobileMenuBtn" class="lg:hidden text-solar-blue hover:text-blue-600 transition duration-300 p-1 sm:p-2 mr-1 sm:mr-2">
+                        <i class="fas fa-bars text-lg sm:text-xl"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-orange text-lg sm:text-xl lg:text-2xl mr-1 sm:mr-2"></i>
+                        <span class="text-sm sm:text-lg lg:text-xl font-bold text-solar-blue">Veeteq Solar Admin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
+                    <a href="{{ url_for('home') }}" class="text-gray-700 hover:text-solar-blue text-xs sm:text-sm lg:text-base" target="_blank">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        <span class="hidden lg:inline">View Website</span>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-red-500 text-white px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-md hover:bg-red-600 transition duration-300 text-xs sm:text-sm lg:text-base">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        <span class="hidden lg:inline">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex min-h-screen overflow-hidden">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+        
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg min-h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0">
+            <nav class="mt-5 px-2">
+                <a href="{{ url_for('admin_dashboard') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('admin_customers') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-users mr-3"></i>
+                    Customers
+                </a>
+                <a href="{{ url_for('admin_quotes') }}" class="bg-solar-blue text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-file-invoice-dollar mr-3"></i>
+                    Quotes
+                </a>
+                <a href="{{ url_for('admin_installations') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-tools mr-3"></i>
+                    Installations
+                </a>
+                <a href="{{ url_for('admin_products') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-box mr-3"></i>
+                    Products
+                </a>
+                <a href="{{ url_for('admin_analytics') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-chart-bar mr-3"></i>
+                    Analytics
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 lg:ml-0 overflow-x-auto">
+            <div class="max-w-full">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-4 p-4 rounded-md {% if category == 'success' %}bg-green-100 text-green-700 border border-green-200{% elif category == 'error' %}bg-red-100 text-red-700 border border-red-200{% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    {% if category == 'success' %}
+                                        <i class="fas fa-check-circle"></i>
+                                    {% elif category == 'error' %}
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    {% else %}
+                                        <i class="fas fa-info-circle"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium">{{ message }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="mb-6 sm:mb-8">
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Quote Management</h1>
+                <p class="text-sm sm:text-base text-gray-600 mt-2">Manage solar quotes and proposals</p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="mb-4 sm:mb-6">
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex flex-wrap space-x-2 sm:space-x-4 lg:space-x-8">
+                        <button class="quote-filter-tab active border-solar-blue text-solar-blue whitespace-nowrap py-2 px-1 border-b-2 font-medium text-xs sm:text-sm" data-status="all">
+                            <span class="hidden sm:inline">All Quotes</span>
+                            <span class="sm:hidden">All</span> ({{ quotes|length }})
+                        </button>
+                        <button class="quote-filter-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-xs sm:text-sm" data-status="pending">
+                            Pending
+                        </button>
+                        <button class="quote-filter-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-xs sm:text-sm" data-status="approved">
+                            Approved
+                        </button>
+                        <button class="quote-filter-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-xs sm:text-sm" data-status="rejected">
+                            Rejected
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Search and Actions -->
+            <div class="mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-lg shadow">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                    <div class="flex-1 max-w-md">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" placeholder="Search quotes..." 
+                                   class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-solar-blue focus:border-solar-blue text-sm sm:text-base">
+                        </div>
+                    </div>
+                    <div class="flex space-x-2 sm:space-x-3">
+                        <button class="bg-gray-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300 flex items-center text-sm sm:text-base">
+                            <i class="fas fa-download mr-1 sm:mr-2"></i>
+                            <span class="hidden sm:inline">Export</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quotes Table -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                {% if quotes %}
+                <!-- Desktop Table View -->
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Quote Details
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Customer
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    System Info
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Cost
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for quote in quotes %}
+                            <tr class="hover:bg-gray-50 quote-row" data-status="{{ quote.status }}">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">Quote #{{ quote.id }}</div>
+                                    <div class="text-sm text-gray-500">{{ quote.created_at.strftime('%b %d, %Y at %I:%M %p') if quote.created_at else 'N/A' }}</div>
+                                    <div class="text-sm text-gray-500">{{ quote.property_type.title() if quote.property_type else 'N/A' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <div class="h-8 w-8 rounded-full bg-solar-green text-white flex items-center justify-center">
+                                                <span class="text-xs font-medium">
+                                                    {% if quote.first_name and quote.last_name %}
+                                                        {{ quote.first_name[0] }}{{ quote.last_name[0] }}
+                                                    {% else %}
+                                                        {{ quote.username[0].upper() if quote.username else 'N/A' }}
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {% if quote.first_name and quote.last_name %}
+                                                    {{ quote.first_name }} {{ quote.last_name }}
+                                                {% else %}
+                                                    {{ quote.username or 'N/A' }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="text-sm text-gray-500">{{ quote.email or 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ quote.system_size or 0 }} kW</div>
+                                    <div class="text-sm text-gray-500">{{ quote.roof_size or 0 }} sq ft roof</div>
+                                    <div class="text-sm text-gray-500">{{ quote.energy_usage or 0 }} kWh/month</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">KSh {{ "%.0f"|format(quote.estimated_cost or 0) }}</div>
+                                    <div class="text-sm text-gray-500">Savings: KSh {{ "%.0f"|format(quote.estimated_savings or 0) }}/year</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if quote.status == 'pending' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            Pending
+                                        </span>
+                                    {% elif quote.status == 'approved' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="fas fa-check mr-1"></i>
+                                            Approved
+                                        </span>
+                                    {% elif quote.status == 'rejected' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <i class="fas fa-times mr-1"></i>
+                                            Rejected
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            {{ quote.status.title() if quote.status else 'Unknown' }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <a href="{{ url_for('admin_view_quote', quote_id=quote.id) }}" 
+                                           class="text-solar-blue hover:text-blue-900" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if quote.status == 'pending' %}
+                                        <form method="POST" action="{{ url_for('admin_approve_quote', quote_id=quote.id) }}" class="inline">
+                                            <button type="submit" class="text-solar-green hover:text-green-900" title="Approve"
+                                                    onclick="return confirm('Are you sure you want to approve this quote?')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        </form>
+                                        {% endif %}
+                                        <a href="{{ url_for('admin_edit_quote', quote_id=quote.id) }}" 
+                                           class="text-solar-orange hover:text-orange-900" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if quote.status == 'pending' %}
+                                        <form method="POST" action="{{ url_for('admin_reject_quote', quote_id=quote.id) }}" class="inline">
+                                            <button type="submit" class="text-red-600 hover:text-red-900" title="Reject"
+                                                    onclick="return confirm('Are you sure you want to reject this quote?')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Card View -->
+                <div class="lg:hidden">
+                    {% for quote in quotes %}
+                    <div class="border-b border-gray-200 p-4 hover:bg-gray-50 quote-row" data-status="{{ quote.status }}">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-2">
+                                    <div class="h-8 w-8 rounded-full bg-gradient-to-r from-solar-blue to-blue-600 text-white flex items-center justify-center shadow-sm mr-3">
+                                        <span class="text-xs font-medium">Q{{ quote.id }}</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-semibold text-gray-900">Quote #{{ quote.id }}</h4>
+                                        <p class="text-xs text-gray-500">{{ quote.created_at.strftime('%b %d, %Y at %I:%M %p') if quote.created_at else 'N/A' }}</p>
+                                    </div>
+                                </div>
+                                <div class="text-xs text-gray-600 mb-2">
+                                    <span class="inline-block bg-gray-100 px-2 py-1 rounded-full">{{ quote.property_type.title() if quote.property_type else 'N/A' }}</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="{{ url_for('admin_view_quote', quote_id=quote.id) }}" class="text-blue-600 hover:text-blue-800 text-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('admin_edit_quote', quote_id=quote.id) }}" class="text-green-600 hover:text-green-800 text-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Customer</p>
+                                <div class="flex items-center">
+                                    <div class="h-6 w-6 rounded-full bg-gradient-to-r from-solar-green to-green-600 text-white flex items-center justify-center text-xs mr-2">
+                                        {% if quote.user and quote.user.first_name and quote.user.last_name %}
+                                            {{ quote.user.first_name[0] }}{{ quote.user.last_name[0] }}
+                                        {% else %}
+                                            {{ quote.user.username[0].upper() if quote.user and quote.user.username else 'U' }}
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-900">
+                                            {% if quote.user and quote.user.first_name and quote.user.last_name %}
+                                                {{ quote.user.first_name }} {{ quote.user.last_name }}
+                                            {% else %}
+                                                {{ quote.user.username if quote.user and quote.user.username else 'Unknown' }}
+                                            {% endif %}
+                                        </p>
+                                        <p class="text-xs text-gray-500">{{ quote.user.email if quote.user and quote.user.email else 'N/A' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">System</p>
+                                <p class="text-xs text-gray-900">{{ quote.system_size or 'N/A' }} kW</p>
+                                <p class="text-xs text-gray-500">{{ quote.roof_type.title() if quote.roof_type else 'N/A' }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div>
+                                    <p class="text-xs text-gray-500">Cost</p>
+                                    <p class="text-sm font-semibold text-gray-900">KSh {{ "%.0f"|format(quote.estimated_cost or 0) }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Status</p>
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                        {% if quote.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                        {% elif quote.status == 'approved' %}bg-green-100 text-green-800
+                                        {% elif quote.status == 'rejected' %}bg-red-100 text-red-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ quote.status.title() if quote.status else 'Unknown' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-1">
+                                {% if quote.status == 'pending' %}
+                                <form method="POST" action="{{ url_for('admin_approve_quote', quote_id=quote.id) }}" class="inline">
+                                    <button type="submit" class="text-green-600 hover:text-green-800 text-sm" title="Approve">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin_reject_quote', quote_id=quote.id) }}" class="inline">
+                                    <button type="submit" class="text-red-600 hover:text-red-800 text-sm" title="Reject">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8 sm:py-12">
+                    <i class="fas fa-file-invoice-dollar text-4xl sm:text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-2">No quotes found</h3>
+                    <p class="text-sm sm:text-base text-gray-500 mb-4">Quotes will appear here when customers request them.</p>
+                    <a href="{{ url_for('quote') }}" target="_blank" class="bg-solar-blue text-white px-4 sm:px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300 text-sm sm:text-base">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        View Quote Page
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Summary Stats -->
+            {% if quotes %}
+            <div class="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div class="bg-white p-3 sm:p-4 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-file-invoice-dollar text-xl sm:text-2xl text-solar-blue"></i>
+                        </div>
+                        <div class="ml-2 sm:ml-3">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Total Quotes</p>
+                            <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ quotes|length }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-3 sm:p-4 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-clock text-xl sm:text-2xl text-yellow-500"></i>
+                        </div>
+                        <div class="ml-2 sm:ml-3">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Pending</p>
+                            <p class="text-xl sm:text-2xl font-bold text-gray-900">
+                                {{ quotes|selectattr('status', 'equalto', 'pending')|list|length }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-3 sm:p-4 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-dollar-sign text-xl sm:text-2xl text-solar-green"></i>
+                        </div>
+                        <div class="ml-2 sm:ml-3">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Total Value</p>
+                            <p class="text-xl sm:text-2xl font-bold text-gray-900">
+                                KSh {{ "%.0f"|format(quotes|sum(attribute='estimated_cost') or 0) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-3 sm:p-4 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-chart-line text-xl sm:text-2xl text-solar-orange"></i>
+                        </div>
+                        <div class="ml-2 sm:ml-3">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Avg. System Size</p>
+                            <p class="text-xl sm:text-2xl font-bold text-gray-900">
+                                {{ "%.1f"|format((quotes|sum(attribute='system_size') / quotes|length) if quotes|length > 0 else 0) }} kW
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterTabs = document.querySelectorAll('.quote-filter-tab');
+            const quoteRows = document.querySelectorAll('.quote-row');
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const status = this.getAttribute('data-status');
+                    
+                    // Update active tab
+                    filterTabs.forEach(t => {
+                        t.classList.remove('active', 'border-solar-blue', 'text-solar-blue');
+                        t.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    this.classList.add('active', 'border-solar-blue', 'text-solar-blue');
+                    this.classList.remove('border-transparent', 'text-gray-500');
+                    
+                    // Filter rows
+                    quoteRows.forEach(row => {
+                        const rowStatus = row.getAttribute('data-status');
+                        if (status === 'all' || rowStatus === status) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Mobile sidebar functionality
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                mobileSidebarOverlay.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function closeSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                mobileSidebarOverlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            mobileMenuBtn.addEventListener('click', openSidebar);
+            mobileSidebarOverlay.addEventListener('click', closeSidebar);
+
+            // Close sidebar when clicking on a link (mobile)
+            const sidebarLinks = sidebar.querySelectorAll('a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            // Close sidebar on escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !sidebar.classList.contains('-translate-x-full')) {
+                    closeSidebar();
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

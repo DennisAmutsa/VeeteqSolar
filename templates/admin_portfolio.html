@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Management - Veeteq Solar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308',
+                        'solar-emerald': '#10b981',
+                        'solar-teal': '#14b8a6',
+                        'solar-lime': '#84cc16',
+                        'solar-forest': '#166534'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-solar-emerald-50 to-solar-teal-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b-4 border-solar-emerald">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-emerald text-3xl mr-3 animate-pulse"></i>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Veeteq Solar Admin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('admin_dashboard') }}" class="text-solar-emerald hover:text-solar-forest transition duration-300 font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        Back to Dashboard
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition duration-300 shadow-md">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto py-8 px-4">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Portfolio Gallery Management</h1>
+            <p class="text-solar-forest mt-2 text-lg">📸 Showcase your solar installations and projects</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-6 space-y-2">
+                    {% for category, message in messages %}
+                        <div class="bg-{% if category == 'error' %}red{% else %}green{% endif %}-100 border border-{% if category == 'error' %}red{% else %}green{% endif %}-400 text-{% if category == 'error' %}red{% else %}green{% endif %}-700 px-4 py-3 rounded-lg">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Add New Portfolio Item -->
+        <div class="mb-8">
+            <a href="{{ url_for('admin_add_portfolio') }}" class="bg-gradient-to-r from-solar-emerald to-solar-teal text-white px-6 py-3 rounded-lg hover:from-solar-teal hover:to-solar-emerald transition duration-300 shadow-lg font-medium">
+                <i class="fas fa-plus mr-2"></i>
+                Add New Portfolio Item
+            </a>
+        </div>
+
+        <!-- Portfolio Grid -->
+        {% if portfolio_items %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for item in portfolio_items %}
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden border-t-4 border-solar-emerald hover:shadow-2xl transition duration-300">
+                <div class="relative">
+                    <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full h-48 object-cover">
+                    {% if item.is_featured %}
+                    <div class="absolute top-2 right-2 bg-solar-yellow text-white px-2 py-1 rounded-full text-xs font-bold">
+                        <i class="fas fa-star mr-1"></i>Featured
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-solar-forest mb-2">{{ item.title }}</h3>
+                    <p class="text-gray-600 text-sm mb-3">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        {% if item.location %}
+                        <div class="flex items-center text-sm text-solar-emerald">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            {{ item.location }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if item.system_size %}
+                        <div class="flex items-center text-sm text-solar-teal">
+                            <i class="fas fa-solar-panel mr-2"></i>
+                            {{ item.system_size }} kW System
+                        </div>
+                        {% endif %}
+                        
+                        {% if item.installation_date %}
+                        <div class="flex items-center text-sm text-solar-lime">
+                            <i class="fas fa-calendar mr-2"></i>
+                            {{ item.installation_date.strftime('%B %Y') if item.installation_date else 'N/A' }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="bg-solar-emerald-100 text-solar-emerald px-3 py-1 rounded-full text-xs font-medium">
+                            {{ item.category.title() }}
+                        </span>
+                        
+                        <div class="flex space-x-2">
+                            <a href="{{ url_for('admin_edit_portfolio', item_id=item.id) }}" class="text-solar-emerald hover:text-solar-forest transition duration-300" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button onclick="deletePortfolioItem({{ item.id }})" class="text-red-500 hover:text-red-700 transition duration-300" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-images text-6xl text-solar-emerald-300 mb-4"></i>
+            <h3 class="text-xl font-medium text-solar-forest mb-2">No portfolio items yet</h3>
+            <p class="text-gray-500 mb-6">Start building your portfolio by adding your first solar installation photo.</p>
+            <a href="{{ url_for('admin_add_portfolio') }}" class="bg-gradient-to-r from-solar-emerald to-solar-teal text-white px-6 py-3 rounded-lg hover:from-solar-teal hover:to-solar-emerald transition duration-300 shadow-lg font-medium">
+                <i class="fas fa-plus mr-2"></i>
+                Add First Portfolio Item
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function deletePortfolioItem(itemId) {
+            if (confirm('Are you sure you want to delete this portfolio item? This action cannot be undone.')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/portfolio/delete/${itemId}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+</html>

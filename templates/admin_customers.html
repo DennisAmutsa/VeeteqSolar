@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management - Veeteq Solar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-14 sm:h-16">
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button id="mobileMenuBtn" class="lg:hidden text-solar-blue hover:text-blue-600 transition duration-300 p-1 sm:p-2 mr-1 sm:mr-2">
+                        <i class="fas fa-bars text-lg sm:text-xl"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-orange text-lg sm:text-xl lg:text-2xl mr-1 sm:mr-2"></i>
+                        <span class="text-sm sm:text-lg lg:text-xl font-bold text-solar-blue">Veeteq Solar Admin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
+                    <a href="{{ url_for('home') }}" class="text-gray-700 hover:text-solar-blue text-xs sm:text-sm lg:text-base" target="_blank">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        <span class="hidden lg:inline">View Website</span>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-red-500 text-white px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-md hover:bg-red-600 transition duration-300 text-xs sm:text-sm lg:text-base">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        <span class="hidden lg:inline">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex min-h-screen overflow-hidden">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+        
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg min-h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex-shrink-0">
+            <nav class="mt-5 px-2">
+                <a href="{{ url_for('admin_dashboard') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('admin_customers') }}" class="bg-solar-green text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-users mr-3"></i>
+                    Client Users
+                </a>
+                <a href="{{ url_for('admin_quotes') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-file-invoice-dollar mr-3"></i>
+                    Quote Requests
+                </a>
+                <a href="{{ url_for('admin_installations') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-tools mr-3"></i>
+                    Installations
+                </a>
+                <a href="{{ url_for('admin_products') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-box mr-3"></i>
+                    Products
+                </a>
+                <a href="{{ url_for('admin_analytics') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-chart-bar mr-3"></i>
+                    Analytics
+                </a>
+                <a href="{{ url_for('admin_settings') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-cog mr-3"></i>
+                    Settings
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 lg:ml-0 overflow-x-auto bg-gradient-to-br from-gray-50 to-green-50 min-h-screen">
+            <div class="max-w-full">
+            <div class="mb-6 sm:mb-8">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4">
+                    <div class="bg-gradient-to-r from-solar-green to-green-600 p-2 sm:p-3 rounded-xl mr-0 sm:mr-4 shadow-lg mb-3 sm:mb-0">
+                        <i class="fas fa-users text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-solar-green to-green-600 bg-clip-text text-transparent">Client Users</h1>
+                        <p class="text-sm sm:text-base lg:text-lg text-gray-600 mt-2">Manage your solar clients and their information</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="mb-6 sm:mb-8 bg-white p-4 sm:p-6 rounded-2xl shadow-xl border border-gray-100">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                    <div class="flex-1 max-w-md">
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400 group-focus-within:text-solar-green transition-colors duration-300"></i>
+                            </div>
+                            <input type="text" placeholder="Search clients..." 
+                                   class="block w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-solar-green focus:border-solar-green focus:bg-white transition-all duration-300">
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                        <a href="{{ url_for('admin_add_customer') }}" class="bg-gradient-to-r from-solar-blue to-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:from-blue-600 hover:to-solar-blue transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center text-sm sm:text-base">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            <span class="hidden sm:inline">Add Client</span>
+                            <span class="sm:hidden">Add</span>
+                        </a>
+                        <button class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center text-sm sm:text-base">
+                            <i class="fas fa-download mr-2"></i>
+                            <span class="hidden sm:inline">Export</span>
+                            <span class="sm:hidden">Export</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="bg-white shadow-2xl overflow-hidden rounded-2xl border border-gray-100">
+                <div class="px-4 sm:px-6 py-4 sm:py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                        <div class="flex items-center mb-2 sm:mb-0">
+                            <div class="bg-gradient-to-r from-solar-green to-green-600 p-2 rounded-lg mr-3">
+                                <i class="fas fa-list text-white"></i>
+                            </div>
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-800">
+                                Client List 
+                                <span class="bg-gradient-to-r from-solar-green to-green-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm ml-2">
+                                    {{ customers|length }} clients
+                                </span>
+                            </h3>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs sm:text-sm text-gray-500">
+                            <i class="fas fa-clock mr-1"></i>
+                            <span>Last updated: Today</span>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if customers %}
+                <!-- Desktop Table View -->
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gradient-to-r from-gray-50 to-blue-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-user mr-2 text-solar-green"></i>Client
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-envelope mr-2 text-solar-green"></i>Contact
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-map-marker-alt mr-2 text-solar-orange"></i>Location
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-calendar mr-2 text-solar-yellow"></i>Created
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-cogs mr-2 text-gray-600"></i>Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            {% for customer in customers %}
+                            <tr class="hover:bg-gradient-to-r hover:from-blue-50 hover:to-green-50 transition-all duration-300 group">
+                                <td class="px-6 py-6 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-12 w-12">
+                                            <div class="h-12 w-12 rounded-full bg-gradient-to-r from-solar-blue to-blue-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                                <span class="text-sm font-medium">
+                                                    {% if customer.first_name and customer.last_name %}
+                                                        {{ customer.first_name[0] }}{{ customer.last_name[0] }}
+                                                    {% else %}
+                                                        {{ customer.username[0].upper() }}
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {% if customer.first_name and customer.last_name %}
+                                                    {{ customer.first_name }} {{ customer.last_name }}
+                                                {% else %}
+                                                    {{ customer.username }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="text-sm text-gray-500">ID: #{{ customer.id }} | @{{ customer.username }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ customer.email }}</div>
+                                    <div class="text-sm text-gray-500">{{ customer.phone or 'No phone' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">
+                                        {% if customer.city and customer.state %}
+                                            {{ customer.city }}, {{ customer.state }}
+                                        {% else %}
+                                            {{ customer.address or 'No address' }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-sm text-gray-500">{{ customer.zip_code or '' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ customer.created_at.strftime('%b %d, %Y') if customer.created_at else 'N/A' }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <a href="{{ url_for('admin_edit_customer', customer_id=customer.id) }}" class="text-solar-green hover:text-green-900" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button onclick="deleteCustomer({{ customer.id }})" class="text-red-600 hover:text-red-900" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Card View -->
+                <div class="lg:hidden">
+                    {% for customer in customers %}
+                    <div class="border-b border-gray-200 p-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-green-50 transition-all duration-300">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 rounded-full bg-gradient-to-r from-solar-blue to-blue-600 text-white flex items-center justify-center shadow-lg mr-3">
+                                    <span class="text-sm font-medium">
+                                        {% if customer.first_name and customer.last_name %}
+                                            {{ customer.first_name[0] }}{{ customer.last_name[0] }}
+                                        {% else %}
+                                            {{ customer.username[0].upper() }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-900">
+                                        {% if customer.first_name and customer.last_name %}
+                                            {{ customer.first_name }} {{ customer.last_name }}
+                                        {% else %}
+                                            {{ customer.username }}
+                                        {% endif %}
+                                    </h4>
+                                    <p class="text-xs text-gray-500">{{ customer.email }}</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="{{ url_for('admin_edit_customer', customer_id=customer.id) }}" class="text-blue-600 hover:text-blue-800 text-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button onclick="deleteCustomer({{ customer.id }})" class="text-red-600 hover:text-red-800 text-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                            <div class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-1 text-solar-orange"></i>
+                                <span>{{ customer.address or 'N/A' }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar mr-1 text-solar-yellow"></i>
+                                <span>{{ customer.created_at.strftime('%b %d, %Y') if customer.created_at else 'N/A' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-12">
+                    <i class="fas fa-users text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No clients yet</h3>
+                    <p class="text-gray-500 mb-4">Start by adding your first client to the system.</p>
+                    <a href="{{ url_for('admin_add_customer') }}" class="bg-gradient-to-r from-solar-green to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-solar-green transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 inline-flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Add First Client
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Pagination -->
+            {% if customers|length > 10 %}
+            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Previous
+                    </a>
+                    <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Next
+                    </a>
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">{{ customers|length }}</span> of <span class="font-medium">{{ customers|length }}</span> results
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                            <a href="#" class="bg-solar-blue border-solar-blue text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
+                            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function deleteCustomer(customerId) {
+            if (confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/customers/delete/${customerId}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Mobile sidebar functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                mobileSidebarOverlay.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function closeSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                mobileSidebarOverlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            mobileMenuBtn.addEventListener('click', openSidebar);
+            mobileSidebarOverlay.addEventListener('click', closeSidebar);
+
+            // Close sidebar when clicking on a link (mobile)
+            const sidebarLinks = sidebar.querySelectorAll('a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            // Close sidebar on escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !sidebar.classList.contains('-translate-x-full')) {
+                    closeSidebar();
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

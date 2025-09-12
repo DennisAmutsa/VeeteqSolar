@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}Veeteq Solar - Clean Energy Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-8 text-white overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="{{ url_for('static', filename='uploads/placeholder.jpg') }}" alt="Solar Energy Solutions" class="w-full h-full object-cover">
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-blue-500/25 to-indigo-600/30"></div>
+    </div>
+    
+    <!-- Solar Panel Grid Background -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="grid grid-cols-12 gap-4 h-full">
+            {% for i in range(12) %}
+            <div class="bg-white/10 rounded-sm"></div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Floating Solar Elements -->
+    <div class="absolute inset-0">
+        <div class="absolute top-20 left-10 w-16 h-16 bg-yellow-400/30 rounded-lg rotate-12 animate-pulse"></div>
+        <div class="absolute top-40 right-20 w-12 h-12 bg-orange-400/30 rounded-lg rotate-45 animate-bounce"></div>
+        <div class="absolute bottom-40 left-1/4 w-20 h-20 bg-yellow-300/20 rounded-lg rotate-12"></div>
+        <div class="absolute bottom-20 right-1/3 w-14 h-14 bg-orange-300/30 rounded-lg rotate-45 animate-pulse"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-center min-h-[40vh]">
+            <!-- Main Content - Centered -->
+            <div class="text-center max-w-4xl">
+                <!-- Solar Badge -->
+                <div class="inline-flex items-center bg-yellow-400/20 backdrop-blur-sm rounded-full px-4 py-2 mb-4 border border-yellow-400/30">
+                    <i class="fas fa-solar-panel text-yellow-300 mr-2 text-lg animate-spin"></i>
+                    <span class="text-yellow-100 font-medium text-sm">🌞 Harnessing the Power of the Sun Since 2020</span>
+                </div>
+                
+                <!-- Main Headline -->
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">
+                    <span class="text-white">POWER YOUR </span>
+                    <span class="bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-500 bg-clip-text text-transparent animate-pulse">
+                        FUTURE
+                    </span>
+                    <span class="text-white"> WITH SOLAR</span>
+                </h1>
+                
+                <!-- Subtitle -->
+                <p class="text-lg md:text-xl mb-6 leading-relaxed text-blue-100 font-light">
+                    ☀️ Transform your home into a <span class="text-yellow-300 font-semibold">clean energy powerhouse</span> 
+                    <br>💰 Save thousands on electricity bills while saving the planet
+                </p>
+                
+                <!-- CTA Button -->
+                <div class="flex justify-center items-center mb-8">
+                    <a href="{{ url_for('quote') }}" class="group bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-orange-500 hover:to-yellow-400 text-black px-10 py-4 rounded-xl text-xl font-bold transition-all duration-300 shadow-xl hover:shadow-yellow-500/25 transform hover:-translate-y-1 hover:scale-105">
+                        <i class="fas fa-calculator mr-3"></i>
+                        GET FREE SOLAR QUOTE
+                        <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <i class="fas fa-chevron-down text-yellow-300 text-2xl"></i>
+    </div>
+</section>
+
+<!-- Solar Benefits Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Why Choose Solar Energy?</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Transform your home and save money with clean, renewable solar power</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Money Savings -->
+            <div class="text-center group">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors duration-300">
+                    <i class="fas fa-dollar-sign text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Save Money</h3>
+                <p class="text-gray-600 mb-4">Reduce your electricity bills by up to 90% with solar power</p>
+                <div class="text-green-600 font-bold text-lg">KSh 200,000/year saved</div>
+            </div>
+            
+            <!-- Environmental Impact -->
+            <div class="text-center group">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors duration-300">
+                    <i class="fas fa-leaf text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Go Green</h3>
+                <p class="text-gray-600 mb-4">Reduce your carbon footprint and help the environment</p>
+                <div class="text-blue-600 font-bold text-lg">4 tons CO₂ reduced</div>
+            </div>
+            
+            <!-- Property Value -->
+            <div class="text-center group">
+                <div class="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors duration-300">
+                    <i class="fas fa-home text-orange-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Increase Value</h3>
+                <p class="text-gray-600 mb-4">Boost your home's value with solar installation</p>
+                <div class="text-orange-600 font-bold text-lg">+KSh 2,000,000 value</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center bg-solar-blue/10 text-solar-blue px-4 py-2 rounded-full text-sm font-medium mb-4">
+                <i class="fas fa-cogs mr-2"></i>
+                Our Services
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Complete Solar Solutions</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">From initial consultation to ongoing maintenance, we provide end-to-end solar energy solutions</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-solar-orange/20 transform hover:-translate-y-2">
+                <div class="bg-gradient-to-br from-solar-orange to-solar-yellow text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-solar-panel text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Solar Installation</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">Professional installation of residential and commercial solar systems with certified technicians and premium equipment.</p>
+                <ul class="text-sm text-gray-500 mb-6 space-y-2">
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>Custom system design</li>
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>Permit handling</li>
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>Quality guarantee</li>
+                </ul>
+                <a href="{{ url_for('services') }}" class="inline-flex items-center text-solar-orange hover:text-solar-yellow font-semibold group-hover:translate-x-1 transition-transform">
+                    Learn More <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-solar-emerald/20 transform hover:-translate-y-2">
+                <div class="bg-gradient-to-br from-solar-emerald to-solar-teal text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-tools text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Maintenance & Support</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">Regular maintenance and monitoring to ensure optimal performance and maximize your solar investment returns.</p>
+                <ul class="text-sm text-gray-500 mb-6 space-y-2">
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>24/7 monitoring</li>
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>Annual inspections</li>
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>Performance reports</li>
+                </ul>
+                <a href="{{ url_for('services') }}" class="inline-flex items-center text-solar-emerald hover:text-solar-teal font-semibold group-hover:translate-x-1 transition-transform">
+                    Learn More <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-solar-blue/20 transform hover:-translate-y-2">
+                <div class="bg-gradient-to-br from-solar-blue to-solar-emerald text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-calculator text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Energy Consultation</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">Expert analysis to determine the best solar solution for your needs with detailed ROI calculations and financing options.</p>
+                <ul class="text-sm text-gray-500 mb-6 space-y-2">
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>Free site assessment</li>
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>ROI projections</li>
+                    <li class="flex items-center"><i class="fas fa-check text-solar-emerald mr-2"></i>Financing options</li>
+                </ul>
+                <a href="{{ url_for('services') }}" class="inline-flex items-center text-solar-blue hover:text-solar-emerald font-semibold group-hover:translate-x-1 transition-transform">
+                    Learn More <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Solar Technology Section -->
+<section class="py-20 bg-gradient-to-br from-white via-sky-50 to-blue-50 relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-20 left-20 w-40 h-40 bg-solar-emerald rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-32 h-32 bg-solar-orange rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-solar-blue rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center bg-solar-emerald/10 text-solar-emerald px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <i class="fas fa-solar-panel mr-2 animate-pulse"></i>
+                Premium Solar Technology
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                <span class="bg-gradient-to-r from-solar-blue to-solar-emerald bg-clip-text text-transparent">
+                    Cutting-Edge Solar Solutions
+                </span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                We use only the highest quality solar panels and technology from leading manufacturers to ensure maximum efficiency and long-term reliability for your investment.
+            </p>
+        </div>
+
+        <!-- Technology Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+            <!-- Left Side - Technology Features -->
+            <div class="space-y-8">
+                <div class="group">
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-gradient-to-br from-solar-emerald to-solar-teal text-white w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-bolt text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">High-Efficiency Monocrystalline Panels</h3>
+                            <p class="text-gray-600 leading-relaxed">Premium monocrystalline silicon panels with up to 22% efficiency rating, ensuring maximum energy production even in low-light conditions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-gradient-to-br from-solar-blue to-solar-emerald text-white w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-shield-alt text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Weather-Resistant Design</h3>
+                            <p class="text-gray-600 leading-relaxed">Built to withstand harsh weather conditions with IP68 rating, anti-reflective coating, and corrosion-resistant aluminum frames.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-gradient-to-br from-solar-orange to-solar-yellow text-white w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Smart Inverter Technology</h3>
+                            <p class="text-gray-600 leading-relaxed">Advanced string inverters with MPPT tracking and real-time monitoring capabilities for optimal energy conversion and system performance.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-gradient-to-br from-solar-teal to-solar-emerald text-white w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-award text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">25-Year Performance Warranty</h3>
+                            <p class="text-gray-600 leading-relaxed">Industry-leading warranty coverage with guaranteed power output and comprehensive protection for your solar investment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Visual Representation -->
+            <div class="relative">
+                <div class="bg-gradient-to-br from-solar-emerald/10 to-solar-teal/10 rounded-3xl p-8 border border-solar-emerald/20">
+                    <!-- Solar Panel Grid Visualization -->
+                    <div class="grid grid-cols-4 gap-3 mb-6">
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                        <div class="aspect-square bg-gradient-to-br from-solar-emerald to-solar-teal rounded-lg shadow-lg"></div>
+                    </div>
+                    
+                    <!-- Technology Stats -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-4 bg-white/80 rounded-xl">
+                            <div class="text-2xl font-bold text-solar-emerald mb-1">22%</div>
+                            <div class="text-sm text-gray-600">Efficiency</div>
+                        </div>
+                        <div class="text-center p-4 bg-white/80 rounded-xl">
+                            <div class="text-2xl font-bold text-solar-emerald mb-1">25</div>
+                            <div class="text-sm text-gray-600">Year Warranty</div>
+                        </div>
+                        <div class="text-center p-4 bg-white/80 rounded-xl">
+                            <div class="text-2xl font-bold text-solar-emerald mb-1">IP68</div>
+                            <div class="text-sm text-gray-600">Weather Rating</div>
+                        </div>
+                        <div class="text-center p-4 bg-white/80 rounded-xl">
+                            <div class="text-2xl font-bold text-solar-emerald mb-1">MPPT</div>
+                            <div class="text-sm text-gray-600">Smart Tracking</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Elements -->
+                <div class="absolute -top-4 -right-4 w-16 h-16 bg-solar-orange/20 rounded-full animate-pulse"></div>
+                <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-solar-yellow/20 rounded-full animate-bounce"></div>
+            </div>
+        </div>
+
+        <!-- Brand Trust Section -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-8 border border-gray-200">
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Trusted by Leading Manufacturers</h3>
+                <p class="text-gray-600">We partner with industry-leading solar technology companies to bring you the best products available.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-solar-emerald to-solar-teal rounded-xl mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-solar-panel text-white text-2xl"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-gray-700">Monocrystalline</div>
+                    <div class="text-xs text-gray-500">Premium Grade</div>
+                </div>
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-solar-blue to-solar-emerald rounded-xl mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-microchip text-white text-2xl"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-gray-700">Smart Inverters</div>
+                    <div class="text-xs text-gray-500">MPPT Technology</div>
+                </div>
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-solar-orange to-solar-yellow rounded-xl mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-gray-700">Weather Proof</div>
+                    <div class="text-xs text-gray-500">IP68 Rated</div>
+                </div>
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-solar-teal to-solar-emerald rounded-xl mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-award text-white text-2xl"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-gray-700">Certified</div>
+                    <div class="text-xs text-gray-500">ISO Standards</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-20 bg-gradient-to-br from-solar-blue via-solar-emerald to-solar-teal text-white relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 right-10 w-32 h-32 border-2 border-white rounded-full"></div>
+        <div class="absolute bottom-10 left-10 w-24 h-24 border-2 border-white rounded-full"></div>
+        <div class="absolute top-1/2 left-1/4 w-16 h-16 border-2 border-white rounded-full"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Trusted by Thousands</h2>
+            <p class="text-xl opacity-90">Our track record speaks for itself</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">500+</div>
+                <div class="text-lg opacity-90">Successful Installations</div>
+            </div>
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">4+</div>
+                <div class="text-lg opacity-90">Years of Excellence</div>
+            </div>
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">98%</div>
+                <div class="text-lg opacity-90">Customer Satisfaction</div>
+            </div>
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">KSh 300M+</div>
+                <div class="text-lg opacity-90">Customer Savings</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-12 bg-gradient-to-br from-gray-50 to-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+            <div class="inline-flex items-center bg-solar-emerald/10 text-solar-emerald px-3 py-1.5 rounded-full text-xs font-medium mb-4">
+                <i class="fas fa-rocket mr-2"></i>
+                Ready to Get Started?
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Ready to Go Solar?</h2>
+            <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                Get a free consultation and quote today. Our experts will help you design the perfect solar system for your needs and budget.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-3 justify-center items-center mb-6">
+                <a href="{{ url_for('quote') }}" class="group bg-gradient-to-r from-solar-orange to-solar-yellow hover:from-solar-yellow hover:to-solar-orange text-white px-8 py-3 rounded-lg text-base font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Get Free Quote
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="{{ url_for('contact') }}" class="group border-2 border-solar-emerald text-solar-emerald hover:bg-solar-emerald hover:text-white px-8 py-3 rounded-lg text-base font-semibold transition-all duration-300 hover:shadow-lg">
+                    <i class="fas fa-phone mr-2"></i>
+                    Contact Us
+                </a>
+            </div>
+            
+            <!-- Trust Badges -->
+            <div class="flex flex-wrap justify-center items-center gap-6 text-xs text-gray-500">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-solar-emerald mr-2"></i>
+                    <span>25-Year Warranty</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-clock text-solar-emerald mr-2"></i>
+                    <span>Free Consultation</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-dollar-sign text-solar-emerald mr-2"></i>
+                    <span>No Upfront Costs</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

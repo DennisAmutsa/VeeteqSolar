@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio - Veeteq Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-16 text-white overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="{{ url_for('static', filename='uploads/placeholder.jpg') }}" alt="Solar Portfolio" class="w-full h-full object-cover">
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-solar-orange/60 to-solar-yellow/50"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Our Solar Portfolio</h1>
+        <p class="text-xl max-w-2xl mx-auto drop-shadow-md">Showcasing successful solar installations across residential and commercial properties</p>
+    </div>
+</section>
+
+<!-- Portfolio Stats -->
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Our Impact in Numbers</h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-solar-orange to-solar-yellow rounded-full mx-auto"></div>
+        </div>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+                <div class="bg-gradient-to-r from-solar-blue to-blue-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-solar-panel text-white text-lg"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-bold text-solar-blue mb-1">{{ stats.completed_installations or 0 }}+</div>
+                <div class="text-sm text-gray-600">Projects Completed</div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+                <div class="bg-gradient-to-r from-solar-green to-green-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-bolt text-white text-lg"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-bold text-solar-green mb-1">{{ "{:.1f}".format(stats.total_capacity or 0) }}MW</div>
+                <div class="text-sm text-gray-600">Total Capacity</div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+                <div class="bg-gradient-to-r from-solar-orange to-orange-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-dollar-sign text-white text-lg"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-bold text-solar-orange mb-1">KSh {{ "{:.0f}".format((stats.total_revenue or 0) / 1000) }}K+</div>
+                <div class="text-sm text-gray-600">Customer Savings</div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+                <div class="bg-gradient-to-r from-solar-yellow to-yellow-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-leaf text-white text-lg"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-bold text-solar-yellow mb-1">{{ "{:.0f}".format((stats.total_capacity or 0) * 1.2) }}K</div>
+                <div class="text-sm text-gray-600">Tons CO₂ Reduced</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Categories -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Featured Projects</h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-solar-green to-solar-blue rounded-full mx-auto mb-4"></div>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">Browse our successful installations by category</p>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="text-center mb-8">
+            <div class="inline-flex flex-wrap bg-white rounded-xl p-1 shadow-lg border border-gray-200">
+                <button class="portfolio-filter active px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-medium bg-gradient-to-r from-solar-blue to-blue-600 text-white transition-all duration-300" data-filter="all">
+                    <i class="fas fa-th-large mr-2"></i>All Projects
+                </button>
+                <button class="portfolio-filter px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-medium text-gray-600 hover:text-solar-blue hover:bg-blue-50 transition-all duration-300" data-filter="residential">
+                    <i class="fas fa-home mr-2"></i>Residential
+                </button>
+                <button class="portfolio-filter px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-medium text-gray-600 hover:text-solar-blue hover:bg-blue-50 transition-all duration-300" data-filter="commercial">
+                    <i class="fas fa-building mr-2"></i>Commercial
+                </button>
+                <button class="portfolio-filter px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-medium text-gray-600 hover:text-solar-blue hover:bg-blue-50 transition-all duration-300" data-filter="industrial">
+                    <i class="fas fa-industry mr-2"></i>Industrial
+                </button>
+            </div>
+        </div>
+
+        <!-- Portfolio Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {% if portfolio_items %}
+                {% for item in portfolio_items %}
+                <div class="portfolio-item bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group" data-category="{{ item.category or 'installation' }}">
+                    <div class="relative overflow-hidden">
+                        {% if item.image_url %}
+                            <img src="{{ url_for('static', filename='uploads/' + item.image_url.split('/')[-1]) }}" alt="{{ item.title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        {% else %}
+                            <div class="w-full h-48 bg-gradient-to-br from-solar-green to-solar-blue flex items-center justify-center">
+                                <i class="fas fa-solar-panel text-white text-4xl"></i>
+                            </div>
+                        {% endif %}
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-gradient-to-r from-solar-green to-green-600 text-white text-xs px-3 py-1 rounded-full font-medium">{{ (item.category or 'installation').title() }}</span>
+                    </div>
+                            {% if item.system_size %}
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-white/90 backdrop-blur-sm text-gray-800 text-xs px-2 py-1 rounded-full font-medium">{{ item.system_size }} kW</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="p-4 sm:p-6">
+                        <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2 group-hover:text-solar-blue transition-colors duration-300">{{ item.title }}</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ item.description or 'Professional solar installation completed successfully.' }}</p>
+                        <div class="space-y-2 text-sm">
+                            {% if item.system_size %}
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-bolt text-solar-orange mr-2 w-4"></i>
+                                <span class="font-medium">{{ item.system_size }} kW System</span>
+                            </div>
+                            {% endif %}
+                            {% if item.location %}
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-map-marker-alt text-solar-green mr-2 w-4"></i>
+                                <span>{{ item.location }}</span>
+                            </div>
+                            {% endif %}
+                            {% if item.installation_date %}
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-calendar text-solar-blue mr-2 w-4"></i>
+                                <span>{{ item.installation_date.strftime('%Y') }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="flex items-center text-green-600">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4"></i>
+                                <span class="font-medium">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- No portfolio items message -->
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-solar-panel text-6xl text-solar-emerald-300 mb-4"></i>
+                    <h3 class="text-xl font-medium text-gray-800 mb-2">No portfolio items yet</h3>
+                    <p class="text-gray-500 mb-6">Our portfolio will showcase completed solar installations soon.</p>
+                    <a href="{{ url_for('quote') }}" class="bg-gradient-to-r from-solar-emerald to-solar-teal text-white px-6 py-3 rounded-lg hover:from-solar-teal hover:to-solar-emerald transition duration-300 shadow-lg font-medium">
+                        <i class="fas fa-plus mr-2"></i>
+                        Get Your Quote
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Customer Testimonials -->
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">What Our Customers Say</h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-solar-orange to-solar-yellow rounded-full mx-auto mb-4"></div>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">Real feedback from satisfied customers</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 text-sm">"Veeteq Solar exceeded our expectations. Professional installation, great communication, and our system is performing better than projected!"</p>
+                <div class="flex items-center">
+                    <div class="bg-gradient-to-r from-solar-blue to-blue-600 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-gray-800 text-sm">Jennifer M.</div>
+                        <div class="text-xs text-gray-600">Residential Customer</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 text-sm">"Outstanding service from start to finish. The team handled all permits and paperwork. Our energy bills have dropped by 85%!"</p>
+                <div class="flex items-center">
+                    <div class="bg-gradient-to-r from-solar-green to-green-600 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-gray-800 text-sm">Robert K.</div>
+                        <div class="text-xs text-gray-600">Commercial Customer</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 text-sm">"Best investment we've made! The system pays for itself and we love knowing we're helping the environment."</p>
+                <div class="flex items-center">
+                    <div class="bg-gradient-to-r from-solar-orange to-orange-600 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-gray-800 text-sm">Maria S.</div>
+                        <div class="text-xs text-gray-600">Residential Customer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 bg-gradient-to-r from-solar-green to-solar-blue text-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Ready to Join Our Success Stories?</h2>
+        <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto">Let us design a custom solar solution that meets your energy needs and budget.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="{{ url_for('quote') }}" class="w-full sm:w-auto bg-white text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+                <i class="fas fa-calculator mr-2"></i>
+                Get Your Quote
+            </a>
+            <a href="{{ url_for('contact') }}" class="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold transition duration-300 text-center">
+                <i class="fas fa-phone mr-2"></i>
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.portfolio-filter');
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            
+            // Update active button
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-solar-blue', 'text-white');
+                btn.classList.add('text-gray-600');
+            });
+            this.classList.add('active', 'bg-solar-blue', 'text-white');
+            this.classList.remove('text-gray-600');
+            
+            // Filter portfolio items
+            portfolioItems.forEach(item => {
+                const category = item.getAttribute('data-category');
+                if (filter === 'all' || category === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

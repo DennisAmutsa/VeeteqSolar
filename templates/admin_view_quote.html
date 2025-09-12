@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Quote - Veeteq Solar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-orange text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-solar-blue">Veeteq Solar Admin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('admin_quotes') }}" class="text-gray-700 hover:text-solar-blue">
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        Back to Quotes
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <!-- Header -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Quote #{{ quote.id }}</h1>
+                    <p class="text-gray-600 mt-2">Submitted on {{ quote.created_at.strftime('%B %d, %Y at %I:%M %p') if quote.created_at else 'N/A' }}</p>
+                </div>
+                <div class="text-right">
+                    {% if quote.status == 'pending' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                            <i class="fas fa-clock mr-1"></i>
+                            Pending
+                        </span>
+                    {% elif quote.status == 'approved' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <i class="fas fa-check mr-1"></i>
+                            Approved
+                        </span>
+                    {% elif quote.status == 'rejected' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                            <i class="fas fa-times mr-1"></i>
+                            Rejected
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Customer Information -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-user mr-2 text-solar-blue"></i>
+                    Customer Information
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Name</label>
+                        <p class="text-gray-900">
+                            {% if quote.first_name and quote.last_name %}
+                                {{ quote.first_name }} {{ quote.last_name }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Email</label>
+                        <p class="text-gray-900">{{ quote.email or 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Phone</label>
+                        <p class="text-gray-900">{{ quote.phone or 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Address</label>
+                        <p class="text-gray-900">
+                            {% if quote.address %}
+                                {{ quote.address }}
+                                {% if quote.city %}, {{ quote.city }}{% endif %}
+                                {% if quote.state %}, {{ quote.state }}{% endif %}
+                                {% if quote.zip_code %} {{ quote.zip_code }}{% endif %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Information -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-solar-panel mr-2 text-solar-orange"></i>
+                    System Information
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Property Type</label>
+                        <p class="text-gray-900">{{ quote.property_type.title() if quote.property_type else 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Roof Size</label>
+                        <p class="text-gray-900">{{ quote.roof_size or 0 }} sq ft</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Energy Usage</label>
+                        <p class="text-gray-900">{{ quote.energy_usage or 0 }} kWh/month</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">System Size</label>
+                        <p class="text-gray-900">{{ quote.system_size or 0 }} kW</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Information -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-dollar-sign mr-2 text-solar-green"></i>
+                    Financial Information
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Estimated Cost</label>
+                        <p class="text-2xl font-bold text-gray-900">KSh {{ "%.0f"|format(quote.estimated_cost or 0) }}</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Annual Savings</label>
+                        <p class="text-xl font-semibold text-green-600">KSh {{ "%.0f"|format(quote.estimated_savings or 0) }}</p>
+                    </div>
+                    {% if quote.estimated_cost and quote.estimated_savings and quote.estimated_savings > 0 %}
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Payback Period</label>
+                        <p class="text-gray-900">{{ "%.1f"|format(quote.estimated_cost / quote.estimated_savings) }} years</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-sticky-note mr-2 text-solar-yellow"></i>
+                    Notes
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-gray-700">{{ quote.notes or 'No notes available.' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 bg-white shadow rounded-lg p-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">Actions</h3>
+                    <p class="text-gray-600">Manage this quote</p>
+                </div>
+                <div class="flex space-x-3">
+                    <a href="{{ url_for('admin_edit_quote', quote_id=quote.id) }}" 
+                       class="bg-solar-orange text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300">
+                        <i class="fas fa-edit mr-2"></i>
+                        Edit Quote
+                    </a>
+                    {% if quote.status == 'pending' %}
+                    <form method="POST" action="{{ url_for('admin_approve_quote', quote_id=quote.id) }}" class="inline">
+                        <button type="submit" class="bg-solar-green text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300"
+                                onclick="return confirm('Are you sure you want to approve this quote?')">
+                            <i class="fas fa-check mr-2"></i>
+                            Approve
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('admin_reject_quote', quote_id=quote.id) }}" class="inline">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
+                                onclick="return confirm('Are you sure you want to reject this quote?')">
+                            <i class="fas fa-times mr-2"></i>
+                            Reject
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

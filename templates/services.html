@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}Solar Services - Veeteq Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-16 text-white overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="{{ url_for('static', filename='uploads/placeholder.jpg') }}" alt="Solar Services" class="w-full h-full object-cover">
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-solar-green/50 to-solar-blue/40"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Our Solar Services</h1>
+        <p class="text-xl max-w-2xl mx-auto drop-shadow-md">Comprehensive solar solutions from consultation to installation and maintenance</p>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Solar Solutions</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-solar-orange to-solar-yellow rounded-full mx-auto mb-6"></div>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">From residential homes to large commercial facilities, we provide comprehensive solar energy solutions tailored to your specific needs.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            <!-- Residential Solar -->
+            <div class="bg-white p-4 md:p-6 lg:p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-l-4 border-solar-orange group">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start mb-6 text-center sm:text-left">
+                    <div class="bg-gradient-to-r from-solar-orange to-orange-600 text-white w-16 h-16 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-home text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-800">Residential Solar</h3>
+                        <p class="text-solar-orange font-semibold text-sm">For Homeowners</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-6 leading-relaxed">Transform your home into a clean energy powerhouse with our custom residential solar systems. Reduce your electricity bills by up to 90% while increasing your property value.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                    <div class="flex items-center bg-orange-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">Custom Design</span>
+                    </div>
+                    <div class="flex items-center bg-orange-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">Professional Install</span>
+                    </div>
+                    <div class="flex items-center bg-orange-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">25-Year Warranty</span>
+                    </div>
+                    <div class="flex items-center bg-orange-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">Permit Handling</span>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-orange-50 to-yellow-50 p-4 rounded-lg mb-6">
+                    <div class="flex flex-col sm:flex-row items-center sm:justify-between space-y-4 sm:space-y-0">
+                        <div class="text-center sm:text-left">
+                            <p class="text-sm text-gray-600">Average Savings</p>
+                            <p class="text-xl sm:text-2xl font-bold text-solar-orange">KSh 200K/year</p>
+                        </div>
+                        <div class="text-center sm:text-right">
+                            <p class="text-sm text-gray-600">Payback Period</p>
+                            <p class="text-xl sm:text-2xl font-bold text-solar-green">5-7 years</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('quote') }}" class="w-full bg-gradient-to-r from-solar-orange to-orange-600 hover:from-orange-600 hover:to-solar-orange text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-center block">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Get Free Quote
+                </a>
+            </div>
+
+            <!-- Commercial Solar -->
+            <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-l-4 border-solar-blue group">
+                <div class="flex items-center mb-6">
+                    <div class="bg-gradient-to-r from-solar-blue to-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-building text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">Commercial Solar</h3>
+                        <p class="text-solar-blue font-semibold text-sm">For Businesses</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-6 leading-relaxed">Reduce operational costs and enhance your company's sustainability with scalable commercial solar systems. Perfect for offices, warehouses, and industrial facilities.</p>
+                
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="flex items-center bg-blue-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">Large-Scale Systems</span>
+                    </div>
+                    <div class="flex items-center bg-blue-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">Energy Monitoring</span>
+                    </div>
+                    <div class="flex items-center bg-blue-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">Tax Incentives</span>
+                    </div>
+                    <div class="flex items-center bg-blue-50 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-solar-green mr-3"></i>
+                        <span class="text-sm font-medium">Ongoing Support</span>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Cost Reduction</p>
+                            <p class="text-2xl font-bold text-solar-blue">Up to 75%</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">ROI Timeline</p>
+                            <p class="text-2xl font-bold text-solar-green">3-5 years</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('contact') }}" class="w-full bg-gradient-to-r from-solar-blue to-blue-600 hover:from-blue-600 hover:to-solar-blue text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-center block">
+                    <i class="fas fa-handshake mr-2"></i>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Additional Services -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Complete Solar Support</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-solar-green to-solar-blue rounded-full mx-auto mb-6"></div>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">From initial consultation to ongoing maintenance, we're with you every step of your solar journey.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Solar Consultation -->
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-yellow-200 group">
+                <div class="bg-gradient-to-r from-solar-yellow to-yellow-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-lightbulb text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-center">Solar Consultation</h3>
+                <p class="text-gray-600 mb-4 text-center">Expert analysis of your energy needs and property to determine the optimal solar solution for maximum savings.</p>
+                
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Comprehensive Site Assessment</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Energy Usage Analysis</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Financial Projections</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Custom Recommendations</span>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <span class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-semibold">FREE Consultation</span>
+                </div>
+            </div>
+
+            <!-- Maintenance & Monitoring -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-green-200 group">
+                <div class="bg-gradient-to-r from-solar-green to-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-tools text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-center">Maintenance & Monitoring</h3>
+                <p class="text-gray-600 mb-4 text-center">Ongoing support to ensure your solar system operates at peak efficiency and maximum performance year-round.</p>
+                
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Regular System Cleaning</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Performance Monitoring</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Preventive Maintenance</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">24/7 Technical Support</span>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <span class="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold">Lifetime Support</span>
+                </div>
+            </div>
+
+            <!-- Battery Storage -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-blue-200 group">
+                <div class="bg-gradient-to-r from-solar-blue to-blue-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-battery-full text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-center">Battery Storage</h3>
+                <p class="text-gray-600 mb-4 text-center">Store excess solar energy for use during peak hours or power outages with our advanced battery solutions.</p>
+                
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Lithium-Ion Batteries</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Backup Power Systems</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Smart Energy Management</span>
+                    </div>
+                    <div class="flex items-center bg-white p-2 rounded-lg">
+                        <i class="fas fa-check text-solar-green mr-3"></i>
+                        <span class="text-sm">Grid Independence</span>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <span class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold">Energy Freedom</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Installation Process</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Simple, streamlined process from consultation to activation</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="bg-solar-orange text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                <h3 class="text-lg font-semibold mb-2">Consultation</h3>
+                <p class="text-gray-600 text-sm">Free in-home consultation and energy assessment</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-solar-blue text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                <h3 class="text-lg font-semibold mb-2">Design</h3>
+                <p class="text-gray-600 text-sm">Custom system design and permit applications</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-solar-green text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                <h3 class="text-lg font-semibold mb-2">Installation</h3>
+                <p class="text-gray-600 text-sm">Professional installation by certified technicians</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-solar-yellow text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
+                <h3 class="text-lg font-semibold mb-2">Activation</h3>
+                <p class="text-gray-600 text-sm">System testing and activation with monitoring setup</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 bg-gradient-to-r from-solar-blue to-solar-green text-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Ready to Start Your Solar Journey?</h2>
+        <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto">Get a free consultation and personalized quote for your solar installation.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="{{ url_for('quote') }}" class="w-full sm:w-auto bg-white text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+                <i class="fas fa-calculator mr-2"></i>
+                Get Free Quote
+            </a>
+            <a href="{{ url_for('contact') }}" class="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold transition duration-300 text-center">
+                <i class="fas fa-phone mr-2"></i>
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

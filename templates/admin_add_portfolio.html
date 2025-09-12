@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Portfolio Item - Veeteq Solar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'solar-blue': '#1e40af',
+                        'solar-green': '#059669',
+                        'solar-orange': '#ea580c',
+                        'solar-yellow': '#eab308',
+                        'solar-emerald': '#10b981',
+                        'solar-teal': '#14b8a6',
+                        'solar-lime': '#84cc16',
+                        'solar-forest': '#166534'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-solar-emerald-50 to-solar-teal-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b-4 border-solar-emerald">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <i class="fas fa-solar-panel text-solar-emerald text-3xl mr-3 animate-pulse"></i>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Veeteq Solar Admin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('admin_portfolio') }}" class="text-solar-emerald hover:text-solar-forest transition duration-300 font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        Back to Portfolio
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition duration-300 shadow-md">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Add Portfolio Item</h1>
+            <p class="text-solar-forest mt-2 text-lg">📸 Showcase your solar installation</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-6 space-y-2">
+                    {% for category, message in messages %}
+                        <div class="bg-{% if category == 'error' %}red{% else %}green{% endif %}-100 border border-{% if category == 'error' %}red{% else %}green{% endif %}-400 text-{% if category == 'error' %}red{% else %}green{% endif %}-700 px-4 py-3 rounded-lg">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-emerald">
+            <form action="{{ url_for('admin_add_portfolio') }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-solar-forest mb-2">Project Title *</label>
+                        <input type="text" id="title" name="title" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-solar-emerald focus:border-solar-emerald"
+                               placeholder="Residential Solar Installation">
+                    </div>
+                    
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-solar-forest mb-2">Category *</label>
+                        <select id="category" name="category" required
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-solar-emerald focus:border-solar-emerald">
+                            <option value="installation">Installation</option>
+                            <option value="residential">Residential</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="industrial">Industrial</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-solar-forest mb-2">Description *</label>
+                    <textarea id="description" name="description" required rows="4"
+                              class="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-solar-emerald focus:border-solar-emerald"
+                              placeholder="Describe the solar installation project, including key features and benefits..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-solar-forest mb-2">Location</label>
+                        <input type="text" id="location" name="location"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-solar-emerald focus:border-solar-emerald"
+                               placeholder="City, State">
+                    </div>
+                    
+                    <div>
+                        <label for="system_size" class="block text-sm font-medium text-solar-forest mb-2">System Size (kW)</label>
+                        <input type="number" id="system_size" name="system_size" step="0.1"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-solar-emerald focus:border-solar-emerald"
+                               placeholder="8.5">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="installation_date" class="block text-sm font-medium text-solar-forest mb-2">Installation Date</label>
+                    <input type="date" id="installation_date" name="installation_date"
+                           class="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-solar-emerald focus:border-solar-emerald">
+                </div>
+
+                <div>
+                    <label for="image" class="block text-sm font-medium text-solar-forest mb-2">Project Photo *</label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-solar-emerald transition duration-300">
+                        <div class="space-y-1 text-center">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-solar-emerald mb-4"></i>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-solar-emerald hover:text-solar-forest focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-solar-emerald">
+                                    <span>Upload a file</span>
+                                    <input id="image" name="image" type="file" accept="image/*" class="sr-only">
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <input type="checkbox" id="is_featured" name="is_featured"
+                           class="w-4 h-4 text-solar-emerald border-gray-300 rounded focus:ring-solar-emerald">
+                    <label for="is_featured" class="ml-2 text-sm text-solar-forest">
+                        <i class="fas fa-star text-solar-yellow mr-1"></i>
+                        Feature this item on the homepage
+                    </label>
+                </div>
+
+                <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                    <a href="{{ url_for('admin_portfolio') }}" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-300 font-medium">
+                        Cancel
+                    </a>
+                    <button type="submit" class="bg-gradient-to-r from-solar-emerald to-solar-teal text-white px-6 py-3 rounded-lg hover:from-solar-teal hover:to-solar-emerald transition duration-300 shadow-lg font-medium">
+                        <i class="fas fa-save mr-2"></i>
+                        Add Portfolio Item
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

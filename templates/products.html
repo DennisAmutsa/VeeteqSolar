@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Solar Products - Veeteq Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-16 text-white overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="{{ url_for('static', filename='uploads/placeholder.jpg') }}" alt="Solar Products" class="w-full h-full object-cover">
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-solar-blue/50 to-solar-orange/60"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Premium Solar Products</h1>
+        <p class="text-xl max-w-2xl mx-auto drop-shadow-md">High-quality solar panels, inverters, and energy storage solutions from leading manufacturers</p>
+    </div>
+</section>
+
+<!-- Product Categories -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Filter Buttons -->
+        <div class="text-center mb-12">
+            <div class="inline-flex flex-wrap justify-center bg-gray-100 rounded-lg p-1 gap-1">
+                <button class="filter-btn active px-3 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap" data-filter="all">All Products</button>
+                <button class="filter-btn px-3 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap" data-filter="panels">Solar Panels</button>
+                <button class="filter-btn px-3 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap" data-filter="inverters">Inverters</button>
+                <button class="filter-btn px-3 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap" data-filter="batteries">Batteries</button>
+                <button class="filter-btn px-3 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap" data-filter="mounting">Mounting</button>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8" id="products-grid">
+            {% for product in products %}
+            <div class="product-card bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300" data-category="{{ product.category }}">
+                <div class="aspect-w-16 aspect-h-12 bg-gray-200 rounded-t-lg overflow-hidden">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-48 object-cover" onerror="this.src='/static/uploads/placeholder.jpg'">
+                </div>
+                
+                <div class="p-4 sm:p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="bg-solar-blue text-white text-xs px-2 py-1 rounded-full uppercase">{{ product.category }}</span>
+                        {% if product.wattage > 0 %}
+                        <span class="text-xs sm:text-sm text-gray-600">{{ product.wattage }}W</span>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
+                    <p class="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-3">{{ product.description }}</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        {% if product.efficiency > 0 %}
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Efficiency:</span>
+                            <span class="font-medium">{{ product.efficiency }}%</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if product.warranty_years > 0 %}
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Warranty:</span>
+                            <span class="font-medium">{{ product.warranty_years }} years</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div class="text-xl sm:text-2xl font-bold text-solar-orange">KSh {{ "%.0f"|format(product.price) }}</div>
+                        <button class="w-full sm:w-auto bg-solar-blue text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300 text-xs sm:text-sm font-semibold">
+                            <i class="fas fa-plus mr-1"></i>
+                            Add to Quote
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if not products %}
+        <div class="text-center py-12">
+            <i class="fas fa-solar-panel text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">No Products Available</h3>
+            <p class="text-gray-500">Products will be displayed here once they are added to the database.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Product Features -->
+<section class="py-16 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Why Choose Our Products?</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">We partner with industry-leading manufacturers to bring you the best solar technology</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            <div class="text-center">
+                <div class="bg-solar-green text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-award text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Premium Quality</h3>
+                <p class="text-gray-600 text-sm">Top-tier products from trusted manufacturers with proven track records</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-solar-blue text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Extended Warranty</h3>
+                <p class="text-gray-600 text-sm">Comprehensive warranties up to 25 years for peace of mind</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-solar-orange text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-bolt text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">High Efficiency</h3>
+                <p class="text-gray-600 text-sm">Maximum energy production with industry-leading efficiency ratings</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-solar-yellow text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-tools text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Expert Installation</h3>
+                <p class="text-gray-600 text-sm">Professional installation by certified technicians</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Brands Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Trusted Brands</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">We work with the industry's most respected manufacturers</p>
+        </div>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 items-center">
+            <div class="text-center text-gray-400 font-semibold text-lg">SunPower</div>
+            <div class="text-center text-gray-400 font-semibold text-lg">Tesla</div>
+            <div class="text-center text-gray-400 font-semibold text-lg">LG</div>
+            <div class="text-center text-gray-400 font-semibold text-lg">Enphase</div>
+            <div class="text-center text-gray-400 font-semibold text-lg">SolarEdge</div>
+            <div class="text-center text-gray-400 font-semibold text-lg">Panasonic</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 bg-gradient-to-r from-solar-green to-solar-blue text-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Need Help Choosing?</h2>
+        <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto">Our solar experts will help you select the perfect products for your specific needs and budget.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="{{ url_for('quote') }}" class="w-full sm:w-auto bg-white text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+                <i class="fas fa-calculator mr-2"></i>
+                Get Custom Quote
+            </a>
+            <a href="{{ url_for('contact') }}" class="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-solar-blue px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg font-semibold transition duration-300 text-center">
+                <i class="fas fa-phone mr-2"></i>
+                Speak to Expert
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const productCards = document.querySelectorAll('.product-card');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active', 'bg-solar-blue', 'text-white'));
+            this.classList.add('active', 'bg-solar-blue', 'text-white');
+            
+            // Filter products
+            productCards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                if (filter === 'all' || category === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // Set initial active state
+    document.querySelector('.filter-btn[data-filter="all"]').classList.add('bg-solar-blue', 'text-white');
+});
+</script>
+{% endblock %}
