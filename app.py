@@ -441,7 +441,6 @@ def portfolio():
         # Get portfolio items
         cursor.execute("""
             SELECT * FROM portfolio 
-            WHERE is_featured = TRUE 
             ORDER BY created_at DESC
         """)
         portfolio_items = cursor.fetchall()
