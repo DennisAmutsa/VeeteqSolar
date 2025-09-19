@@ -218,12 +218,6 @@ function initSmoothScrolling() {
     anchorLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-            
-            // Skip if href is just '#' or empty
-            if (targetId === '#' || targetId.length <= 1) {
-                return;
-            }
-            
             const targetElement = document.querySelector(targetId);
             
             if (targetElement) {
