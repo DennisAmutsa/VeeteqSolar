@@ -6,12 +6,19 @@ import os
 import time
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
 
 # WhatsApp Configuration
 WHATSAPP_NUMBER = '254720426780'
+
+# Configure upload folder
+UPLOAD_FOLDER = 'static/uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.context_processor
 def inject_settings():
@@ -248,22 +255,52 @@ def init_db():
         
         # Insert default settings
         default_settings = [
-            ('dark_mode', 'false', 'boolean', 'Enable dark mode for the application'),
-            ('email_notifications', 'true', 'boolean', 'Send email alerts for new quotes'),
-            ('company_name', 'Veeteq Solar', 'string', 'Company name displayed on the website'),
-            ('default_currency', 'KSh', 'string', 'Default currency for pricing'),
-            ('session_timeout', '30', 'number', 'Session timeout in minutes'),
-            ('max_login_attempts', '5', 'number', 'Maximum login attempts before lockout'),
-            ('cost_per_watt_residential', '375', 'number', 'Cost per watt for residential installations (KSh)'),
-            ('cost_per_watt_commercial', '325', 'number', 'Cost per watt for commercial installations (KSh)'),
-            ('savings_per_kwh', '20', 'number', 'Savings per kWh generated (KSh)')
+            ('company_name', 'Veeteq Solar', 'string', 'The name of the company'),
+            ('default_currency', 'KSh', 'string', 'Currency symbol for prices'),
+            ('residential_cost_per_watt', '375', 'float', 'Cost per watt for residential installations'),
+            ('commercial_cost_per_watt', '325', 'float', 'Cost per watt for commercial installations'),
+            ('cost_per_kwh', '20', 'float', 'Average utility cost per kWh'),
+            ('email_notification_enabled', 'false', 'boolean', 'Enable email notifications'),
+            ('session_timeout', '30', 'integer', 'Session timeout in minutes'),
+            ('max_login_attempts', '5', 'integer', 'Maximum login attempts before lockout')
         ]
         
-        for key, value, setting_type, description in default_settings:
+        for key, value, type_key, description in default_settings:
             cursor.execute("""
-                INSERT IGNORE INTO settings (setting_key, setting_value, setting_type, description) 
+                INSERT IGNORE INTO settings (setting_key, setting_value, setting_type, description)
                 VALUES (%s, %s, %s, %s)
-            """, (key, value, setting_type, description))
+            """, (key, value, type_key, description))
+            
+        # Create team_members table and migrate data
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS team_members (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                role VARCHAR(100) NOT NULL,
+                bio TEXT,
+                image_url VARCHAR(255),
+                bg_color VARCHAR(50) DEFAULT 'solar-blue',
+                display_order INT DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # Check if team members table is empty
+        cursor.execute("SELECT COUNT(*) as count FROM team_members")
+        if cursor.fetchone()[0] == 0:
+            print("Migrating default team members...")
+            default_team = [
+                ('Cedric Sumba', 'CEO & Founder', '4+ years in renewable energy', 'cedric_sumba.jpg', 'solar-blue', 1),
+                ('Grace Wanjiku', 'Head of Engineering', 'Expert in system design', 'grace_wanjiku.jpg', 'solar-green', 2),
+                ('Peter Kamau', 'Installation Manager', 'Certified master electrician', 'peter_kamau.jpg', 'solar-orange', 3),
+                ('Mary Akinyi', 'Customer Success', 'Dedicated to customer satisfaction', 'mary_akinyi.jpg', 'solar-yellow', 4)
+            ]
+            
+            for name, role, bio, image, color, order in default_team:
+                cursor.execute("""
+                    INSERT INTO team_members (name, role, bio, image_url, bg_color, display_order)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (name, role, bio, image, color, order))
         
         # Drop old tables if they exist (for migration from old system)
         try:
@@ -469,7 +506,17 @@ def contact():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    # Fetch team members for dynamic display
+    connection = get_db_connection()
+    team_members = []
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM team_members ORDER BY display_order ASC")
+        team_members = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        
+    return render_template('about.html', team_members=team_members)
 
 @app.route('/portfolio')
 def portfolio():
@@ -1486,6 +1533,135 @@ def admin_analytics():
         connection.close()
     
     return render_template('admin_analytics.html', analytics=analytics)
+
+# Team Management Routes
+@app.route('/admin/team')
+def admin_team():
+    if 'user' not in session or session['user']['role'] != 'admin':
+        return redirect(url_for('login'))
+    
+    connection = get_db_connection()
+    team_members = []
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM team_members ORDER BY display_order ASC")
+        team_members = cursor.fetchall()
+        cursor.close()
+        connection.close()
+    
+    return render_template('admin_team.html', team_members=team_members)
+
+@app.route('/admin/team/add', methods=['GET', 'POST'])
+def admin_add_team_member():
+    if 'user' not in session or session['user']['role'] != 'admin':
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        name = request.form['name']
+        role = request.form['role']
+        bio = request.form['bio']
+        bg_color = request.form['bg_color']
+        display_order = request.form['display_order']
+        
+        # Handle image upload
+        image_url = ''
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename != '':
+                filename = secure_filename(file.filename)
+                timestamp = int(datetime.now().timestamp())
+                filename = f"team_{timestamp}_{filename}"
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image_url = filename
+        
+        connection = get_db_connection()
+        if connection:
+            cursor = connection.cursor()
+            cursor.execute("""
+                INSERT INTO team_members (name, role, bio, image_url, bg_color, display_order)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (name, role, bio, image_url, bg_color, display_order))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            flash('Team member added successfully!', 'success')
+            return redirect(url_for('admin_team'))
+            
+            return redirect(url_for('admin_team'))
+            
+    return render_template('admin_add_team_member.html')
+
+@app.route('/admin/team/edit/<int:member_id>', methods=['GET', 'POST'])
+def admin_edit_team_member(member_id):
+    if 'user' not in session or session['user']['role'] != 'admin':
+        return redirect(url_for('login'))
+    
+    connection = get_db_connection()
+    member = None
+    if connection:
+        cursor = connection.cursor(dictionary=True)
+        
+        if request.method == 'POST':
+            name = request.form['name']
+            role = request.form['role']
+            bio = request.form['bio']
+            bg_color = request.form['bg_color']
+            display_order = request.form['display_order']
+            
+            # Handle image upload
+            image_update_sql = ""
+            params = [name, role, bio, bg_color, display_order]
+            
+            if 'image' in request.files:
+                file = request.files['image']
+                if file and file.filename != '':
+                    filename = secure_filename(file.filename)
+                    timestamp = int(datetime.now().timestamp())
+                    filename = f"team_{timestamp}_{filename}"
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    image_update_sql = ", image_url = %s"
+                    params.append(filename)
+            
+            params.append(member_id)
+            
+            cursor.execute(f"""
+                UPDATE team_members 
+                SET name = %s, role = %s, bio = %s, bg_color = %s, display_order = %s{image_update_sql}
+                WHERE id = %s
+            """, tuple(params))
+            
+            connection.commit()
+            cursor.close()
+            connection.close()
+            flash('Team member updated successfully!', 'success')
+            return redirect(url_for('admin_team'))
+            
+        cursor.execute("SELECT * FROM team_members WHERE id = %s", (member_id,))
+        member = cursor.fetchone()
+        cursor.close()
+        connection.close()
+    
+    if not member:
+        flash('Team member not found!', 'error')
+        return redirect(url_for('admin_team'))
+        
+    return render_template('admin_edit_team_member.html', member=member)
+
+@app.route('/admin/team/delete/<int:member_id>', methods=['POST'])
+def admin_delete_team_member(member_id):
+    if 'user' not in session or session['user']['role'] != 'admin':
+        return redirect(url_for('login'))
+    
+    connection = get_db_connection()
+    if connection:
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM team_members WHERE id = %s", (member_id,))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        flash('Team member deleted successfully!', 'success')
+    
+    return redirect(url_for('admin_team'))
 
 
 @app.route('/admin/settings', methods=['GET', 'POST'])

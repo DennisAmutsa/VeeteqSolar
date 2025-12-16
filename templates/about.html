@@ -112,53 +112,29 @@
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {% for member in team_members %}
             <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-blue bg-gradient-to-r from-solar-blue to-blue-600 flex items-center justify-center">
-                    <img src="{{ url_for('static', filename='uploads/cedric_sumba.jpg') }}" alt="Cedric Sumba" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-{{ member.bg_color }} bg-gradient-to-r from-{{ member.bg_color }} to-{{ member.bg_color.split('-')[0] + '-600' }} flex items-center justify-center">
+                    {% if member.image_url and member.image_url.startswith('team_') %}
+                        <!-- Dynamic Upload -->
+                        <img src="{{ url_for('static', filename='uploads/' + member.image_url) }}" alt="{{ member.name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    {% else %}
+                        <!-- Legacy/Default -->
+                        <img src="{{ url_for('static', filename='uploads/' + member.image_url) }}" alt="{{ member.name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    {% endif %}
                     <div class="w-full h-full flex items-center justify-center" style="display: none;">
                         <i class="fas fa-user text-white text-2xl"></i>
                     </div>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Cedric Sumba</h3>
-                <p class="text-solar-blue font-medium text-sm mb-2">CEO & Founder</p>
-                <p class="text-xs text-gray-600">4+ years in renewable energy</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">{{ member.name }}</h3>
+                <p class="text-{{ member.bg_color }} font-medium text-sm mb-2">{{ member.role }}</p>
+                <p class="text-xs text-gray-600">{{ member.bio }}</p>
             </div>
-            
-            <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-green bg-gradient-to-r from-solar-green to-green-600 flex items-center justify-center">
-                    <img src="{{ url_for('static', filename='uploads/grace_wanjiku.jpg') }}" alt="Grace Wanjiku" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
-                        <i class="fas fa-user text-white text-2xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Grace Wanjiku</h3>
-                <p class="text-solar-green font-medium text-sm mb-2">Head of Engineering</p>
-                <p class="text-xs text-gray-600">Expert in system design</p>
+            {% else %}
+            <div class="col-span-1 sm:col-span-2 lg:col-span-4 text-center py-8">
+                <p class="text-gray-500">Team members are being updated. Check back soon!</p>
             </div>
-            
-            <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-orange bg-gradient-to-r from-solar-orange to-orange-600 flex items-center justify-center">
-                    <img src="{{ url_for('static', filename='uploads/peter_kamau.jpg') }}" alt="Peter Kamau" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
-                        <i class="fas fa-user text-white text-2xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Peter Kamau</h3>
-                <p class="text-solar-orange font-medium text-sm mb-2">Installation Manager</p>
-                <p class="text-xs text-gray-600">Certified master electrician</p>
-            </div>
-            
-            <div class="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-solar-yellow bg-gradient-to-r from-solar-yellow to-yellow-600 flex items-center justify-center">
-                    <img src="{{ url_for('static', filename='uploads/mary_akinyi.jpg') }}" alt="Mary Akinyi" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
-                        <i class="fas fa-user text-white text-2xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Mary Akinyi</h3>
-                <p class="text-solar-yellow font-medium text-sm mb-2">Customer Success</p>
-                <p class="text-xs text-gray-600">Dedicated to customer satisfaction</p>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
