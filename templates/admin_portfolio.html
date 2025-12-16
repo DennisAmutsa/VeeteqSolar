@@ -84,7 +84,7 @@
             {% for item in portfolio_items %}
             <div class="bg-white rounded-xl shadow-xl overflow-hidden border-t-4 border-solar-emerald hover:shadow-2xl transition duration-300">
                 <div class="relative">
-                    <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full h-48 object-cover">
+                    <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full h-auto object-cover">
                     {% if item.is_featured %}
                     <div class="absolute top-2 right-2 bg-solar-yellow text-white px-2 py-1 rounded-full text-xs font-bold">
                         <i class="fas fa-star mr-1"></i>Featured

@@ -34,9 +34,9 @@ image.png{% extends "base.html" %}
             <!-- Main Content - Centered -->
             <div class="text-center max-w-4xl">
                 <!-- Solar Badge -->
-                <div class="inline-flex items-center bg-yellow-400/20 backdrop-blur-sm rounded-full px-4 py-2 mb-4 border border-yellow-400/30">
-                    <i class="fas fa-calculator text-yellow-300 mr-2 text-lg"></i>
-                    <span class="text-yellow-100 font-medium text-sm">🌞 Get Your Free Solar Quote</span>
+                <div class="inline-flex items-center bg-blue-500/20 backdrop-blur-sm rounded-full px-4 py-2 mb-4 border border-blue-400/30">
+                    <i class="fas fa-calculator text-blue-300 mr-2 text-lg"></i>
+                    <span class="text-blue-100 font-medium text-sm">Get Your Solar Quote</span>
                 </div>
                 
                 <!-- Main Headline -->
@@ -48,10 +48,16 @@ image.png{% extends "base.html" %}
                 </h1>
                 
                 <!-- Subtitle -->
-                <p class="text-lg md:text-xl mb-6 leading-relaxed text-blue-100 font-light">
-                    ☀️ Discover how much you can save with solar energy
-                    <br>💰 Get instant estimates and detailed quotes in minutes
-                </p>
+                <div class="flex flex-col space-y-2 text-lg md:text-xl mb-6 leading-relaxed text-blue-100 font-light">
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-bolt text-yellow-400 mr-2"></i>
+                        <span>Discover how much you can save with solar energy</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <i class="fas fa-money-bill-wave text-green-400 mr-2"></i>
+                        <span>Get instant estimates and detailed quotes in minutes</span>
+                    </div>
+                </div>
                 
                 <!-- CTA Button -->
                 <div class="flex justify-center items-center mb-8">
@@ -134,21 +140,9 @@ image.png{% extends "base.html" %}
                             </div>
                             <input type="number" id="monthlyBill" name="monthlyBill" 
                                    class="w-full pl-16 pr-4 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-300 bg-gray-50 focus:bg-white text-center font-semibold" 
-                                   placeholder="15000" min="1000" max="500000" required>
+                                   placeholder="e.g. 3000" min="500" required>
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                 <i class="fas fa-money-bill-wave text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <!-- Bill Range Indicators -->
-                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm text-gray-600">
-                            <div class="bg-gray-50 rounded-lg p-3 text-center">
-                                <div class="font-semibold text-gray-800">Typical Home</div>
-                                <div>KSh 8,000 - 25,000</div>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-3 text-center">
-                                <div class="font-semibold text-gray-800">Small Business</div>
-                                <div>KSh 30,000 - 100,000</div>
                             </div>
                         </div>
                     </div>
@@ -184,79 +178,79 @@ image.png{% extends "base.html" %}
 
         <!-- Results Section (Hidden initially) -->
         <div id="quoteResults" class="hidden">
-            <div class="bg-gradient-to-r from-solar-blue to-solar-green text-white p-8 rounded-2xl shadow-2xl">
-                <div class="text-center mb-8">
-                    <h3 class="text-3xl font-bold mb-2 flex items-center justify-center">
-                        <i class="fas fa-chart-line mr-3"></i>
+            <div class="bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white p-8 rounded-2xl shadow-2xl border border-gray-800">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-bold mb-3 flex items-center justify-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-orange-400">
+                        <i class="fas fa-chart-line mr-3 text-orange-400"></i>
                         Your Solar Savings Analysis
                     </h3>
-                    <div class="w-32 h-1 bg-white/50 rounded-full mx-auto"></div>
+                    <div class="w-32 h-1 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full mx-auto"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <div class="bg-white/5 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-yellow-500/30 transition-colors duration-300">
                         <div class="text-center">
-                            <div class="text-3xl font-bold mb-2" id="systemSize">-</div>
-                            <div class="text-sm opacity-90">System Size (kW)</div>
-                            <div class="text-xs opacity-75 mt-1">Solar panels needed</div>
+                            <div class="text-4xl font-bold mb-2 text-white" id="panelCount">-</div>
+                            <div class="text-sm font-medium text-gray-300 uppercase tracking-wide">Solar Panels</div>
+                            <div class="text-xs text-gray-400 mt-2">System Size: <span id="systemSize">-</span> kW</div>
                         </div>
                     </div>
 
-                    <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+                    <div class="bg-white/5 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-yellow-500/30 transition-colors duration-300">
                         <div class="text-center">
-                            <div class="text-2xl font-bold mb-2" id="annualSavings">KSh -</div>
-                            <div class="text-sm opacity-90">Annual Savings</div>
-                            <div class="text-xs opacity-75 mt-1">Money you'll save yearly</div>
+                            <div class="text-3xl font-bold mb-2 text-yellow-400" id="annualSavings">KSh -</div>
+                            <div class="text-sm font-medium text-gray-300 uppercase tracking-wide">Annual Savings</div>
+                            <div class="text-xs text-gray-400 mt-2">Money you'll save yearly</div>
                         </div>
                     </div>
 
-                    <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+                    <div class="bg-white/5 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-yellow-500/30 transition-colors duration-300">
                         <div class="text-center">
-                            <div class="text-2xl font-bold mb-2" id="paybackPeriod">-</div>
-                            <div class="text-sm opacity-90">Payback Period</div>
-                            <div class="text-xs opacity-75 mt-1">Years to break even</div>
+                            <div class="text-4xl font-bold mb-2 text-white" id="paybackPeriod">-</div>
+                            <div class="text-sm font-medium text-gray-300 uppercase tracking-wide">Payback Years</div>
+                            <div class="text-xs text-gray-400 mt-2">Time to break even</div>
                         </div>
                     </div>
 
-                    <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+                    <div class="bg-white/5 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-yellow-500/30 transition-colors duration-300">
                         <div class="text-center">
-                            <div class="text-2xl font-bold mb-2" id="totalSavings">KSh -</div>
-                            <div class="text-sm opacity-90">25-Year Savings</div>
-                            <div class="text-xs opacity-75 mt-1">Total savings over time</div>
+                            <div class="text-3xl font-bold mb-2 text-green-400" id="totalSavings">KSh -</div>
+                            <div class="text-sm font-medium text-gray-300 uppercase tracking-wide">25-Year Savings</div>
+                            <div class="text-xs text-gray-400 mt-2">Lifetime savings</div>
                     </div>
                     </div>
                 </div>
                 
                 <!-- Investment Summary -->
-                <div class="bg-white/20 backdrop-blur-sm p-6 rounded-xl border border-white/30">
-                    <h4 class="text-xl font-bold mb-4 text-center">Investment Summary</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div>
-                            <div class="text-lg font-semibold mb-1">System Cost</div>
-                            <div class="text-xl font-bold" id="systemCost">KSh -</div>
-                            <div class="text-xs opacity-80">Total investment</div>
+                <div class="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-white/10 mb-8">
+                    <h4 class="text-xl font-bold mb-6 text-center text-gray-200">Investment Summary</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-700">
+                        <div class="py-2">
+                            <div class="text-sm uppercase tracking-wider text-gray-400 mb-1">System Cost</div>
+                            <div class="text-xl font-bold text-white" id="systemCost">KSh -</div>
+                            <div class="text-xs text-gray-500 mt-1">Total investment</div>
                         </div>
-                    <div>
-                            <div class="text-lg font-semibold mb-1">After Incentives</div>
-                            <div class="text-xl font-bold text-solar-yellow" id="netCost">KSh -</div>
-                            <div class="text-xs opacity-80">What you'll pay</div>
+                        <div class="py-2">
+                            <div class="text-sm uppercase tracking-wider text-gray-400 mb-1">Net Cost</div>
+                            <div class="text-2xl font-bold text-yellow-400" id="netCost">KSh -</div>
+                            <div class="text-xs text-orange-400/80 mt-1">What you pay</div>
                         </div>
-                        <div>
-                            <div class="text-lg font-semibold mb-1">Monthly Payment</div>
-                            <div class="text-xl font-bold" id="monthlyPayment">KSh -</div>
-                            <div class="text-xs opacity-80">Financing available</div>
-                        </div>
+                        <div class="py-2">
+                            <div class="text-sm uppercase tracking-wider text-gray-400 mb-1">Monthly Payment</div>
+                            <div class="text-xl font-bold text-white" id="monthlyPayment">KSh -</div>
+                            <div class="text-xs text-gray-500 mt-1">Financing available</div>
                         </div>
                     </div>
+                </div>
 
                 <!-- Call to Action -->
-                <div class="mt-8 text-center">
-                    <div class="bg-solar-yellow/20 border border-solar-yellow/30 rounded-xl p-4 mb-6">
-                        <p class="text-lg font-semibold mb-2">
-                            <i class="fas fa-lightbulb text-solar-yellow mr-2"></i>
-                            Ready to go solar?
+                <div class="text-center">
+                    <div class="bg-gradient-to-r from-orange-500/20 to-yellow-500/20 border border-orange-500/30 rounded-xl p-6 mb-0">
+                        <p class="text-xl font-bold mb-2 text-orange-200">
+                            <i class="fas fa-bolt text-yellow-400 mr-2"></i>
+                            Ready to switch to solar?
                         </p>
-                        <p class="opacity-90">
+                        <p class="text-gray-300">
                             Get a detailed quote with site assessment and financing options
                         </p>
                     </div>
@@ -319,7 +313,7 @@ image.png{% extends "base.html" %}
                                 Full Name *
                             </label>
                             <div class="relative">
-                                <input type="text" id="firstName" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="John Doe" required>
+                                <input type="text" id="firstName" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="Veeteq Solar" required>
                                 <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
                                     <i class="fas fa-user text-gray-400 text-xs"></i>
                                 </div>
@@ -331,7 +325,7 @@ image.png{% extends "base.html" %}
                                 Email Address *
                             </label>
                             <div class="relative">
-                                <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="john@example.com" required>
+                                <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="Veeteq@example.com" required>
                                 <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
                                     <i class="fas fa-envelope text-gray-400 text-xs"></i>
                                 </div>
@@ -343,7 +337,7 @@ image.png{% extends "base.html" %}
                                 Phone Number *
                             </label>
                             <div class="relative">
-                                <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="0720000000" required>
+                                <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="0720426780" required>
                                 <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
                                     <i class="fas fa-phone text-gray-400 text-xs"></i>
                                 </div>
@@ -379,20 +373,20 @@ image.png{% extends "base.html" %}
                     <div class="space-y-3">
                         <div class="group">
                             <label class="block text-xs font-semibold text-gray-700 mb-1" for="address">
-                                Street Address *
+                                Location / Estate *
                             </label>
                             <div class="relative">
-                                <input type="text" id="address" name="address" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="123 Main Street" required>
+                                <input type="text" id="address" name="address" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="e.g. Karen, Miotoni Road" required>
                                 <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
                                     <i class="fas fa-map-marker-alt text-gray-400 text-xs"></i>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="group">
                                 <label class="block text-xs font-semibold text-gray-700 mb-1" for="city">
-                                    City *
+                                    City / Town *
                                 </label>
                                 <input type="text" id="city" name="city" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="Nairobi" required>
                             </div>
@@ -402,13 +396,6 @@ image.png{% extends "base.html" %}
                                     County *
                                 </label>
                                 <input type="text" id="state" name="state" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="Nairobi" required>
-                            </div>
-                            
-                            <div class="group">
-                                <label class="block text-xs font-semibold text-gray-700 mb-1" for="zipCode">
-                                    Zip Code
-                                </label>
-                                <input type="text" id="zipCode" name="zipCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all duration-300 bg-white text-sm" placeholder="00100">
                             </div>
                         </div>
                         
@@ -465,6 +452,13 @@ image.png{% extends "base.html" %}
                         Your information is secure • Free consultation • No obligation
                     </p>
                 </div>
+
+                <!-- Hidden Inputs for Calculated Values -->
+                <input type="hidden" id="hiddenSystemSize" name="systemSize">
+                <input type="hidden" id="hiddenEstimatedCost" name="estimatedCost">
+                <input type="hidden" id="hiddenEstimatedSavings" name="estimatedSavings">
+                <input type="hidden" id="hiddenPanelCount" name="panelCount">
+                <input type="hidden" id="hiddenRoofSize" name="roofSize" value="0">
             </form>
         </div>
     </div>
@@ -602,6 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Update results with enhanced display
+            document.getElementById('panelCount').textContent = data.panelCount;
             document.getElementById('systemSize').textContent = data.systemSize;
             document.getElementById('systemCost').textContent = 'KSh ' + data.systemCost.toLocaleString();
             document.getElementById('annualSavings').textContent = 'KSh ' + data.annualSavings.toLocaleString();
@@ -615,6 +610,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const loanTerm = 60; // 5 years
             const monthlyPayment = Math.round((loanAmount * interestRate / 12) / (1 - Math.pow(1 + interestRate / 12, -loanTerm)));
             document.getElementById('monthlyPayment').textContent = 'KSh ' + monthlyPayment.toLocaleString();
+
+            // Populate hidden fields for detailed quote form
+            document.getElementById('hiddenSystemSize').value = data.systemSize;
+            document.getElementById('hiddenEstimatedCost').value = data.netCost; // Use net cost for the quote
+            document.getElementById('hiddenEstimatedSavings').value = data.annualSavings;
+            document.getElementById('hiddenPanelCount').value = data.panelCount;
+            // Removed roof size dependency
+            
+            // Auto-fill monthly usage in detailed form
+            const formMonthlyUsage = document.getElementById('formMonthlyUsage');
+            if (formMonthlyUsage) {
+                formMonthlyUsage.value = monthlyBill;
+            }
         
         // Show results
             quoteResults.classList.remove('hidden');

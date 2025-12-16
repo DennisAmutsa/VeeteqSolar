@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
+import urllib.parse
 import mysql.connector
 from mysql.connector import Error
 import os
@@ -8,6 +9,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
+
+# WhatsApp Configuration
+WHATSAPP_NUMBER = '254720426780'
 
 @app.context_processor
 def inject_settings():
@@ -320,24 +324,36 @@ def calculate_quote():
         property_type = data.get('propertyType', 'residential')
         
         # Calculate system size (kW) based on monthly usage
-        # Assume 1 kW generates ~120 kWh per month on average
-        required_kwh_monthly = monthly_usage
-        system_size_kw = required_kwh_monthly / 120
+        # Hybrid System Sizing: Factor 1.8x to cover Day Loads + Battery Charging
+        # Assume 1 kW generates ~135 kWh per month on average (Improved efficiency/sun hours)
+        required_kwh_monthly = monthly_usage * 1.8
+        system_size_kw = required_kwh_monthly / 135
         
         # Limit by roof size (assume 1 kW needs ~100 sq ft)
+        # If roof_size is the default 2000 sent by frontend, treat it as effectively unlimited
+        if roof_size == 2000:
+            roof_size = 5000000 # Boost to 5 million sq ft to allow industrial scale quotes
+            
         max_system_by_roof = roof_size / 100
         system_size_kw = min(system_size_kw, max_system_by_roof)
         
+        # Calculate panel count (assuming 550W panels)
+        import math
+        panel_count = max(6, math.ceil(system_size_kw / 0.55))
+        
+        # Recalculate exact system size based on panel count
+        real_system_size_kw = panel_count * 0.55
+        
         # Calculate costs (in Kenyan Shillings) - using dynamic settings
         if property_type == 'residential':
-            cost_per_watt = get_setting('cost_per_watt_residential', 375)
+            cost_per_watt = get_setting('cost_per_watt_residential', 210)
         else:
-            cost_per_watt = get_setting('cost_per_watt_commercial', 325)
+            cost_per_watt = get_setting('cost_per_watt_commercial', 180)
         
-        system_cost = system_size_kw * 1000 * cost_per_watt
+        system_cost = real_system_size_kw * 1000 * cost_per_watt
         
         # Calculate savings using dynamic settings
-        annual_generation = system_size_kw * 1200  # kWh per year
+        annual_generation = real_system_size_kw * 1200  # kWh per year
         savings_per_kwh = get_setting('savings_per_kwh', 20)
         annual_savings = annual_generation * savings_per_kwh
         
@@ -346,7 +362,8 @@ def calculate_quote():
         net_cost = system_cost
         
         result = {
-            'systemSize': round(system_size_kw, 2),
+            'systemSize': round(real_system_size_kw, 2),
+            'panelCount': panel_count,
             'systemCost': round(system_cost, 2),
             'taxCredit': round(tax_credit, 2),
             'netCost': round(net_cost, 2),
@@ -369,7 +386,7 @@ def submit_quote():
         address = request.form.get('address')
         city = request.form.get('city')
         state = request.form.get('state')
-        zip_code = request.form.get('zipCode')
+        zip_code = request.form.get('zipCode', '')
         
         property_type = request.form.get('propertyType')
         roof_size = float(request.form.get('roofSize', 0))
@@ -377,6 +394,7 @@ def submit_quote():
         system_size = float(request.form.get('systemSize', 0))
         estimated_cost = float(request.form.get('estimatedCost', 0))
         estimated_savings = float(request.form.get('estimatedSavings', 0))
+        panel_count = request.form.get('panelCount', '0')
         
         connection = get_db_connection()
         if connection:
@@ -413,8 +431,32 @@ def submit_quote():
             cursor.close()
             connection.close()
             
-            flash('Quote request submitted successfully! We will contact you soon.', 'success')
-            return redirect(url_for('quote'))
+            # WhatsApp Integration
+            try:
+                # Format message for WhatsApp
+                message = f"Hello Veeteq Solar, I would like to proceed with my quote request:\n\n"
+                message += f"*Name:* {name}\n"
+                message += f"*Location:* {address} ({city}, {state})\n"
+                if phone:
+                    message += f"*Phone:* {phone}\n"
+                message += f"\n*System Details:*\n"
+                message += f"- Property: {property_type.title()}\n"
+                message += f"- Monthly Usage: {monthly_usage} KSh\n"
+                if system_size:
+                    message += f"- System Size: {panel_count} Panels ({system_size} kW)\n"
+                if estimated_cost:
+                    message += f"- Est. Cost: {estimated_cost:,.2f} KSh\n"
+                
+                encoded_message = urllib.parse.quote(message)
+                whatsapp_url = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_message}"
+                
+                flash('Quote submitted! Redirecting to WhatsApp...', 'success')
+                return redirect(whatsapp_url)
+                
+            except Exception as e:
+                print(f"WhatsApp redirect error: {str(e)}")
+                flash('Quote request submitted successfully! We will contact you soon.', 'success')
+                return redirect(url_for('quote'))
     
     except Exception as e:
         flash(f'Error submitting quote: {str(e)}', 'error')
@@ -538,25 +580,32 @@ def admin_dashboard():
         result = cursor.fetchone()
         stats['revenue'] = result['total'] if result['total'] else 0
         
-        # Get recent quotes for dashboard
+        # Get all lists for the dashboard calculations
         cursor.execute("""
             SELECT q.*, u.first_name, u.last_name, u.email as customer_email
             FROM quotes q 
             LEFT JOIN users u ON q.customer_id = u.id 
             WHERE u.role = 'client'
             ORDER BY q.created_at DESC 
-            LIMIT 5
         """)
-        recent_quotes = cursor.fetchall()
+        quotes = cursor.fetchall()
         
-        # Get customers for dashboard
         cursor.execute("SELECT * FROM users WHERE role = 'client' ORDER BY created_at DESC")
-        customers = cursor.fetchall()
+        clients = cursor.fetchall()
+        
+        cursor.execute("""
+            SELECT i.*, u.first_name, u.last_name, q.property_type
+            FROM installations i
+            JOIN users u ON i.customer_id = u.id
+            JOIN quotes q ON i.quote_id = q.id
+            ORDER BY i.installation_date DESC
+        """)
+        installations = cursor.fetchall()
         
         cursor.close()
         connection.close()
     
-    return render_template('admin_dashboard.html', stats=stats, recent_quotes=recent_quotes, customers=customers)
+    return render_template('admin_dashboard.html', stats=stats, quotes=quotes, clients=clients, installations=installations)
 
 @app.route('/admin/customers')
 def admin_customers():
@@ -952,12 +1001,7 @@ def client_installations():
 
 @app.route('/client/profile')
 def client_profile():
-    if 'user' not in session or session['user']['role'] != 'client':
-        return redirect(url_for('login'))
-    
     user_id = session['user']['id']
-    
-    connection = get_db_connection()
     user = None
     if connection:
         cursor = connection.cursor(dictionary=True)

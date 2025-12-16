@@ -21,12 +21,10 @@
         </div>
     </div>
     
-    <!-- Floating Solar Elements -->
-    <div class="absolute inset-0">
-        <div class="absolute top-20 left-10 w-16 h-16 bg-yellow-400/30 rounded-lg rotate-12 animate-pulse"></div>
-        <div class="absolute top-40 right-20 w-12 h-12 bg-orange-400/30 rounded-lg rotate-45 animate-bounce"></div>
-        <div class="absolute bottom-40 left-1/4 w-20 h-20 bg-yellow-300/20 rounded-lg rotate-12"></div>
-        <div class="absolute bottom-20 right-1/3 w-14 h-14 bg-orange-300/30 rounded-lg rotate-45 animate-pulse"></div>
+    <!-- Atmospheric Glows -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl mix-blend-overlay animate-pulse"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl mix-blend-overlay animate-pulse" style="animation-delay: 2s;"></div>
     </div>
     
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,9 +32,15 @@
             <!-- Main Content - Centered -->
             <div class="text-center max-w-4xl">
                 <!-- Solar Badge -->
-                <div class="inline-flex items-center bg-yellow-400/20 backdrop-blur-sm rounded-full px-4 py-2 mb-4 border border-yellow-400/30">
-                    <i class="fas fa-solar-panel text-yellow-300 mr-2 text-lg animate-spin"></i>
-                    <span class="text-yellow-100 font-medium text-sm">🌞 Harnessing the Power of the Sun Since 2020</span>
+                <!-- Solar Badge -->
+                <div class="inline-flex items-center bg-white/10 backdrop-blur-md rounded-full px-5 py-2 mb-6 border border-white/20 shadow-lg transition-transform hover:scale-105 duration-300">
+                    <span class="flex h-2 w-2 relative mr-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <span class="text-white font-semibold text-sm tracking-wide uppercase">Clean Energy Solutions</span>
+                    <span class="mx-3 text-white/30">|</span>
+                    <span class="text-blue-200 text-sm font-medium">Est. 2020</span>
                 </div>
                 
                 <!-- Main Headline -->
@@ -49,10 +53,21 @@
                 </h1>
                 
                 <!-- Subtitle -->
-                <p class="text-lg md:text-xl mb-6 leading-relaxed text-blue-100 font-light">
-                    ☀️ Transform your home into a <span class="text-yellow-300 font-semibold">clean energy powerhouse</span> 
-                    <br>💰 Save thousands on electricity bills while saving the planet
-                </p>
+                <!-- Subtitle -->
+                <div class="flex flex-col items-center gap-3 mb-8 text-blue-50">
+                    <div class="flex items-center gap-3 text-lg md:text-xl font-light">
+                        <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <i class="fas fa-check text-green-400 text-sm"></i>
+                        </div>
+                        <span>Transform your home into a clean energy powerhouse</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-lg md:text-xl font-light">
+                        <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <i class="fas fa-check text-green-400 text-sm"></i>
+                        </div>
+                        <span>Save thousands on electricity bills immediately</span>
+                    </div>
+                </div>
                 
                 <!-- CTA Button -->
                 <div class="flex justify-center items-center mb-8">
@@ -251,8 +266,8 @@
                             <i class="fas fa-award text-xl"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">25-Year Performance Warranty</h3>
-                            <p class="text-gray-600 leading-relaxed">Industry-leading warranty coverage with guaranteed power output and comprehensive protection for your solar investment.</p>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Industry Leading Warranty</h3>
+                            <p class="text-gray-600 leading-relaxed">Comprehensive warranty coverage with guaranteed power output and protection for your solar investment.</p>
                         </div>
                     </div>
                 </div>
@@ -280,8 +295,8 @@
                             <div class="text-sm text-gray-600">Efficiency</div>
                         </div>
                         <div class="text-center p-4 bg-white/80 rounded-xl">
-                            <div class="text-2xl font-bold text-solar-emerald mb-1">25</div>
-                            <div class="text-sm text-gray-600">Year Warranty</div>
+                            <div class="text-2xl font-bold text-solar-emerald mb-1">Standard</div>
+                            <div class="text-sm text-gray-600">Product Warranty</div>
                         </div>
                         <div class="text-center p-4 bg-white/80 rounded-xl">
                             <div class="text-2xl font-bold text-solar-emerald mb-1">IP68</div>
@@ -342,36 +357,37 @@
 </section>
 
 <!-- Stats Section -->
-<section class="py-20 bg-gradient-to-br from-solar-blue via-solar-emerald to-solar-teal text-white relative overflow-hidden">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-10 right-10 w-32 h-32 border-2 border-white rounded-full"></div>
-        <div class="absolute bottom-10 left-10 w-24 h-24 border-2 border-white rounded-full"></div>
-        <div class="absolute top-1/2 left-1/4 w-16 h-16 border-2 border-white rounded-full"></div>
+<section class="py-20 bg-gradient-to-br from-white via-blue-50 to-white relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-green-100/50 rounded-full blur-3xl"></div>
     </div>
     
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Trusted by Thousands</h2>
-            <p class="text-xl opacity-90">Our track record speaks for itself</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Trusted by Thousands</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-solar-blue to-solar-emerald rounded-full mx-auto mb-6"></div>
+            <p class="text-xl text-gray-600">Our track record speaks for itself</p>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div class="group">
-                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">500+</div>
-                <div class="text-lg opacity-90">Successful Installations</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            <!-- Stat 1 -->
+            <div class="group text-center p-6 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div class="text-4xl md:text-5xl font-bold mb-3 text-gray-900 group-hover:scale-110 transition-transform duration-300 inline-block">500+</div>
+                <div class="text-sm md:text-base text-gray-600 font-medium uppercase tracking-wide">Successful Installations</div>
             </div>
-            <div class="group">
-                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">4+</div>
-                <div class="text-lg opacity-90">Years of Excellence</div>
+            
+            <!-- Stat 2 -->
+            <div class="group text-center p-6 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div class="text-4xl md:text-5xl font-bold mb-3 text-gray-900 group-hover:scale-110 transition-transform duration-300 inline-block">4+</div>
+                <div class="text-sm md:text-base text-gray-600 font-medium uppercase tracking-wide">Years of Excellence</div>
             </div>
-            <div class="group">
-                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">98%</div>
-                <div class="text-lg opacity-90">Customer Satisfaction</div>
-            </div>
-            <div class="group">
-                <div class="text-4xl md:text-5xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">KSh 300M+</div>
-                <div class="text-lg opacity-90">Customer Savings</div>
+            
+            <!-- Stat 3 -->
+            <div class="group text-center p-6 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div class="text-4xl md:text-5xl font-bold mb-3 text-gray-900 group-hover:scale-110 transition-transform duration-300 inline-block">98%</div>
+                <div class="text-sm md:text-base text-gray-600 font-medium uppercase tracking-wide">Customer Satisfaction</div>
             </div>
         </div>
     </div>
@@ -406,7 +422,7 @@
             <div class="flex flex-wrap justify-center items-center gap-6 text-xs text-gray-500">
                 <div class="flex items-center">
                     <i class="fas fa-shield-alt text-solar-emerald mr-2"></i>
-                    <span>25-Year Warranty</span>
+                    <span>Quality Guarantee</span>
                 </div>
                 <div class="flex items-center">
                     <i class="fas fa-clock text-solar-emerald mr-2"></i>

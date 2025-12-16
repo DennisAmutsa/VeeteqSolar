@@ -91,7 +91,10 @@
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
                     </a>
                 </div>
-                {% elif not session.user %}
+                {% endif %}
+
+                <!-- Standard Menu for Public ONLY -->
+                {% if not session.user %}
                 <div class="hidden md:flex items-center space-x-1">
                     <a href="{{ url_for('home') }}" class="nav-link px-4 py-2 text-gray-700  hover:text-solar-blue hover:bg-blue-50  rounded-lg transition-all duration-300 font-medium relative group">
                         <i class="fas fa-home mr-2 text-sm"></i>Home
@@ -125,16 +128,24 @@
                         <i class="fas fa-user mr-2"></i>Client Portal
                     </a>
                 </div>
+                {% else %}
+                <!-- Logged In User Header (Like Admin) -->
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('home') }}" class="text-gray-700 hover:text-solar-blue text-sm font-medium" target="_blank">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        View Website
+                    </a>
+                </div>
                 {% endif %}
-                
+
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center space-x-2">
                     {% if session.user %}
-                    <button id="sidebar-toggle" class="text-gray-700 hover:text-solar-blue">
+                    <button id="sidebar-toggle" class="text-gray-700 hover:text-solar-blue" aria-label="Toggle Sidebar">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     {% else %}
-                    <button class="mobile-menu-btn text-gray-700 hover:text-solar-blue">
+                    <button class="mobile-menu-btn text-gray-700 hover:text-solar-blue" aria-label="Toggle Mobile Menu">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     {% endif %}
@@ -197,7 +208,7 @@
     <main class="pt-16 {% if session.user %}md:pl-64{% endif %}">
         <!-- Sidebar for logged-in users -->
         {% if session.user %}
-        <div id="client-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out pt-16 md:translate-x-0 -translate-x-full">
+        <div id="client-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out pt-16 md:translate-x-0 -translate-x-full">
             <div class="flex flex-col h-full">
                 <!-- User Profile Section -->
                 <div class="px-4 py-6 border-b border-gray-200">
@@ -219,47 +230,10 @@
 
                 <!-- Navigation Links -->
                 <nav class="flex-1 px-4 py-4 space-y-2">
-                    <!-- Main Navigation -->
-                    <div class="mb-4">
-                        <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Navigation</p>
-                        
-                        <a href="{{ url_for('home') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
-                            <i class="fas fa-home mr-3 text-gray-400"></i>
-                            Home
-                        </a>
-                        
-                        <a href="{{ url_for('services') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
-                            <i class="fas fa-solar-panel mr-3 text-gray-400"></i>
-                            Services
-                        </a>
-                        
-                        <a href="{{ url_for('products') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
-                            <i class="fas fa-box mr-3 text-gray-400"></i>
-                            Products
-                        </a>
-                        
-                        <a href="{{ url_for('quote') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
-                            <i class="fas fa-calculator mr-3 text-gray-400"></i>
-                            Get Quote
-                        </a>
-                        
-                        <a href="{{ url_for('portfolio') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
-                            <i class="fas fa-images mr-3 text-gray-400"></i>
-                            Portfolio
-                        </a>
-                        
-                        <a href="{{ url_for('about') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
-                            <i class="fas fa-info-circle mr-3 text-gray-400"></i>
-                            About
-                        </a>
-                        
-                        <a href="{{ url_for('contact') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
-                            <i class="fas fa-phone mr-3 text-gray-400"></i>
-                            Contact
-                        </a>
-                    </div>
+                    <!-- Main Navigation (Removed as per request) -->
+                    <!-- <div class="mb-4">...</div> -->
                     
-                    <div class="border-t border-gray-200 my-4"></div>
+                    <!-- My Account -->
                     
                     <!-- My Account -->
                     <div class="mb-4">
@@ -277,12 +251,12 @@
                         </a>
                         {% endif %}
                         
-                        <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                        <a href="{{ url_for('client_dashboard') }}#quotes" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
                             <i class="fas fa-file-invoice-dollar mr-3 text-gray-400"></i>
                             My Quotes
                         </a>
                         
-                        <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
+                        <a href="{{ url_for('client_dashboard') }}#installations" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-solar-blue transition duration-300">
                             <i class="fas fa-tools mr-3 text-gray-400"></i>
                             My Installations
                         </a>
@@ -310,7 +284,8 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
+    <!-- Footer (Only for public users) -->
+    {% if not session.user %}
     <footer class="bg-gray-800 text-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -356,6 +331,7 @@
             </div>
         </div>
     </footer>
+    {% endif %}
 
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
@@ -386,6 +362,6 @@
     </script>
     {% endif %}
     
-    {% block scripts %}{% endblock %}v
+    {% block scripts %}{% endblock %}
 </body>
 </html>

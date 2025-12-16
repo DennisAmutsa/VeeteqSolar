@@ -1,810 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Veeteq Solar</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'solar-blue': '#1e40af',
-                        'solar-green': '#059669',
-                        'solar-orange': '#ea580c',
-                        'solar-yellow': '#eab308',
-                        'solar-emerald': '#10b981',
-                        'solar-teal': '#14b8a6',
-                        'solar-lime': '#84cc16',
-                        'solar-forest': '#166534'
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                        'bounce-in': 'bounceIn 0.6s ease-out',
-                        'pulse-slow': 'pulse 3s infinite',
-                        'float': 'float 3s ease-in-out infinite',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        .hover-lift {
-            transition: all 0.3s ease;
-        }
-        .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        
-        /* Mobile sidebar overlay */
-        @media (max-width: 1023px) {
-            #sidebar.fixed {
-                background-color: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(10px);
-            }
-        }
-        
-        /* Prevent horizontal scrolling */
-        * {
-            box-sizing: border-box;
-        }
-        
-        .min-w-0 {
-            min-width: 0;
-        }
-        
-        /* Ensure text doesn't overflow */
-        .truncate {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-solar-emerald-50 to-solar-teal-50 min-h-screen overflow-x-hidden">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg border-b-4 border-solar-emerald animate-fade-in">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-14 sm:h-16">
-                <div class="flex items-center">
-                    <div class="flex items-center ml-12 lg:ml-0">
-                        <i class="fas fa-solar-panel text-solar-emerald text-lg sm:text-xl lg:text-2xl mr-2 sm:mr-3 animate-float"></i>
-                        <span class="text-sm sm:text-lg lg:text-xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Veeteq Solar Admin</span>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
-                    <div class="relative">
-                        <button id="notificationsBtn" class="relative text-solar-emerald hover:text-solar-forest transition duration-300 font-medium p-1 sm:p-2">
-                            <i class="fas fa-bell text-sm sm:text-lg lg:text-xl"></i>
-                            <span id="notificationBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center hidden">3</span>
-                        </button>
-                    </div>
-                    <a href="{{ url_for('home') }}" class="text-solar-emerald hover:text-solar-forest transition duration-300 font-medium hover-lift text-xs sm:text-sm lg:text-base" target="_blank">
-                        <i class="fas fa-external-link-alt mr-1"></i>
-                        <span class="hidden sm:inline">View Website</span>
-                        <span class="sm:hidden">Website</span>
-                    </a>
-                    <a href="{{ url_for('logout') }}" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition duration-300 shadow-md hover-lift text-xs sm:text-sm lg:text-base">
-                        <i class="fas fa-sign-out-alt mr-1"></i>
-                        <span class="hidden lg:inline">Logout</span>
-                    </a>
-                </div>
+{% extends "admin_base.html" %}
+
+{% block content %}
+<div class="max-w-full">
+    <div class="mb-6 sm:mb-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4">
+            <div class="bg-gradient-to-r from-solar-emerald to-solar-teal p-2 sm:p-3 rounded-xl mr-0 sm:mr-4 shadow-lg mb-3 sm:mb-0">
+                <i class="fas fa-tachometer-alt text-white text-xl sm:text-2xl"></i>
             </div>
-        </div>
-    </nav>
-
-    <div class="flex overflow-x-hidden">
-        <!-- Mobile Menu Button -->
-        <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-solar-emerald text-white p-2 rounded-lg shadow-lg">
-            <i class="fas fa-bars text-lg"></i>
-        </button>
-
-        <!-- Sidebar -->
-        <div id="sidebar" class="hidden lg:block w-64 bg-white shadow-xl min-h-screen border-r-4 border-solar-emerald animate-slide-up">
-            <!-- Close button for mobile -->
-            <div class="lg:hidden flex justify-end p-4">
-                <button id="closeSidebarBtn" class="text-solar-forest hover:text-solar-emerald">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <nav class="mt-5 px-2">
-                <a href="{{ url_for('admin_dashboard') }}" class="bg-gradient-to-r from-solar-emerald to-solar-teal text-white group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg shadow-md hover-lift">
-                    <i class="fas fa-tachometer-alt mr-3 text-sm lg:text-lg"></i>
-                    Dashboard
-                </a>
-                <a href="{{ url_for('admin_customers') }}" class="text-solar-forest hover:bg-solar-emerald-50 hover:text-solar-emerald group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg mt-2 transition duration-300 hover-lift">
-                    <i class="fas fa-users mr-3 text-sm lg:text-lg"></i>
-                    <span class="flex-1">Client Users</span>
-                    <span class="bg-solar-emerald text-white text-xs px-2 py-1 rounded-full">{{ stats.customers or 0 }}</span>
-                </a>
-                <a href="{{ url_for('admin_quotes') }}" class="text-solar-forest hover:bg-solar-emerald-50 hover:text-solar-emerald group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg mt-2 transition duration-300 hover-lift">
-                    <i class="fas fa-file-invoice-dollar mr-3 text-sm lg:text-lg"></i>
-                    <span class="flex-1">Quote Requests</span>
-                    <span class="bg-solar-lime text-white text-xs px-2 py-1 rounded-full">{{ stats.quotes or 0 }}</span>
-                </a>
-                <a href="{{ url_for('admin_installations') }}" class="text-solar-forest hover:bg-solar-emerald-50 hover:text-solar-emerald group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg mt-2 transition duration-300 hover-lift">
-                    <i class="fas fa-tools mr-3 text-sm lg:text-lg"></i>
-                    <span class="flex-1">Installations</span>
-                    <span class="bg-solar-teal text-white text-xs px-2 py-1 rounded-full">{{ stats.installations or 0 }}</span>
-                </a>
-                <a href="{{ url_for('admin_portfolio') }}" class="text-solar-forest hover:bg-solar-emerald-50 hover:text-solar-emerald group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg mt-2 transition duration-300 hover-lift">
-                    <i class="fas fa-images mr-3 text-sm lg:text-lg"></i>
-                    Portfolio Gallery
-                </a>
-                <a href="{{ url_for('admin_products') }}" class="text-solar-forest hover:bg-solar-emerald-50 hover:text-solar-emerald group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg mt-2 transition duration-300 hover-lift">
-                    <i class="fas fa-box mr-3 text-sm lg:text-lg"></i>
-                    Products
-                </a>
-                <a href="{{ url_for('admin_analytics') }}" class="text-solar-forest hover:bg-solar-emerald-50 hover:text-solar-emerald group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg mt-2 transition duration-300 hover-lift">
-                    <i class="fas fa-chart-line mr-3 text-sm lg:text-lg"></i>
-                    Analytics
-                </a>
-                <a href="#" class="text-solar-forest hover:bg-solar-emerald-50 hover:text-solar-emerald group flex items-center px-3 py-3 text-sm lg:text-base font-medium rounded-lg mt-2 transition duration-300 hover-lift">
-                    <i class="fas fa-cog mr-3 text-sm lg:text-lg"></i>
-                    Settings
-                </a>
-            </nav>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 p-4 sm:p-6 lg:p-8">
-            <div class="mb-6 sm:mb-8 animate-bounce-in">
-                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Solar Business Dashboard</h1>
-                <p class="text-solar-forest mt-2 text-sm sm:text-base lg:text-lg break-words">🌱 <span class="hidden sm:inline">Harnessing the power of the sun, one installation at a time</span><span class="sm:hidden">Powering the future with solar energy</span></p>
-                <div class="mt-4 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                    <div class="flex items-center text-xs sm:text-sm text-gray-600">
-                        <i class="fas fa-clock mr-2 text-solar-emerald"></i>
-                        Last updated: <span id="lastUpdated"></span>
-                    </div>
-                    <button id="refreshBtn" class="bg-solar-emerald text-white px-3 py-1 rounded-lg hover:bg-solar-teal transition duration-300 text-xs sm:text-sm">
-                        <i class="fas fa-sync-alt mr-1"></i>Refresh
-                    </button>
-                </div>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-emerald hover-lift animate-slide-up" style="animation-delay: 0.1s;">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-r from-solar-emerald to-solar-teal text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg animate-pulse-slow">
-                                    <i class="fas fa-users text-lg sm:text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="ml-3 sm:ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Client Users</dt>
-                                    <dd class="text-2xl sm:text-3xl font-bold text-solar-emerald counter" data-target="{{ stats.customers or 0 }}">0</dd>
-                                    <dd class="text-xs text-gray-500">Registered customers</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-lime hover-lift animate-slide-up" style="animation-delay: 0.2s;">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-r from-solar-lime to-solar-emerald text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg animate-pulse-slow">
-                                    <i class="fas fa-file-invoice-dollar text-lg sm:text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="ml-3 sm:ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Pending Quotes</dt>
-                                    <dd class="text-2xl sm:text-3xl font-bold text-solar-lime counter" data-target="{{ stats.quotes or 0 }}">0</dd>
-                                    <dd class="text-xs text-gray-500">Awaiting approval</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-teal hover-lift animate-slide-up" style="animation-delay: 0.3s;">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-r from-solar-teal to-solar-emerald text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg animate-pulse-slow">
-                                    <i class="fas fa-solar-panel text-lg sm:text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="ml-3 sm:ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Installations</dt>
-                                    <dd class="text-2xl sm:text-3xl font-bold text-solar-teal counter" data-target="{{ stats.installations or 0 }}">0</dd>
-                                    <dd class="text-xs text-gray-500">Completed projects</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white overflow-hidden shadow-xl rounded-xl border-l-4 border-solar-yellow hover-lift animate-slide-up" style="animation-delay: 0.4s;">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-r from-solar-yellow to-solar-lime text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg animate-pulse-slow">
-                                    <i class="fas fa-dollar-sign text-lg sm:text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="ml-3 sm:ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-xs sm:text-sm font-medium text-solar-forest truncate">Revenue</dt>
-                                    <dd class="text-2xl sm:text-3xl font-bold text-solar-yellow counter" data-target="{{ stats.revenue or 0 }}">0</dd>
-                                    <dd class="text-xs text-gray-500">Total earnings</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-                <!-- Recent Quotes -->
-                <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-emerald overflow-hidden">
-                    <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-solar-emerald-100">
-                        <h3 class="text-base sm:text-lg font-medium text-solar-forest flex items-center">
-                            <i class="fas fa-file-invoice-dollar text-solar-emerald mr-2"></i>
-                            Recent Quote Requests
-                        </h3>
-                    </div>
-                    <div class="p-4 sm:p-6 overflow-x-auto">
-                        {% if recent_quotes %}
-                        <div class="space-y-4">
-                            {% for quote in recent_quotes %}
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100 min-w-0">
-                                <div class="flex-1 min-w-0 mr-2">
-                                    <p class="text-xs sm:text-sm font-medium text-gray-900 truncate">
-                                        {% if quote.first_name and quote.last_name %}
-                                            {{ quote.first_name }} {{ quote.last_name }}
-                                        {% else %}
-                                            {{ quote.customer_email or 'Unknown Customer' }}
-                                        {% endif %}
-                                    </p>
-                                    <p class="text-xs sm:text-sm text-gray-500">{{ quote.system_size or 'N/A' }} kW System</p>
-                                </div>
-                                <div class="text-right flex-shrink-0">
-                                    <p class="text-xs sm:text-sm font-medium text-gray-900">${{ "{:,.0f}".format(quote.estimated_cost or 0) }}</p>
-                                    <p class="text-xs text-gray-500">
-                                        {% if quote.created_at %}
-                                            {{ quote.created_at.strftime('%b %d, %Y') }}
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    </p>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        <div class="text-center py-8">
-                            <i class="fas fa-file-invoice-dollar text-4xl text-gray-300 mb-4"></i>
-                            <p class="text-gray-500">No recent quotes found</p>
-                        </div>
-                        {% endif %}
-                        <div class="mt-4">
-                            <a href="{{ url_for('admin_quotes') }}" class="text-solar-emerald hover:text-solar-forest font-medium text-sm flex items-center">
-                                View all quotes <i class="fas fa-arrow-right ml-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="bg-white shadow-xl rounded-xl border-t-4 border-solar-lime overflow-hidden">
-                    <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-solar-lime-100">
-                        <h3 class="text-base sm:text-lg font-medium text-solar-forest flex items-center">
-                            <i class="fas fa-bolt text-solar-lime mr-2"></i>
-                            Quick Actions
-                        </h3>
-                    </div>
-                    <div class="p-4 sm:p-6">
-                        <div class="space-y-2 sm:space-y-3">
-                            <a href="{{ url_for('admin_quotes') }}" class="flex items-center p-3 sm:p-4 bg-gradient-to-r from-solar-emerald-50 to-solar-teal-50 rounded-lg hover:from-solar-emerald-100 hover:to-solar-teal-100 transition duration-300 border border-solar-emerald-200">
-                                <i class="fas fa-file-invoice-dollar text-solar-emerald mr-2 sm:mr-3 text-sm sm:text-lg"></i>
-                                <span class="text-solar-forest font-medium text-sm sm:text-base">Review Pending Quotes</span>
-                            </a>
-                            <a href="{{ url_for('admin_add_customer') }}" class="flex items-center p-3 sm:p-4 bg-gradient-to-r from-solar-lime-50 to-solar-emerald-50 rounded-lg hover:from-solar-lime-100 hover:to-solar-emerald-100 transition duration-300 border border-solar-lime-200">
-                                <i class="fas fa-user-plus text-solar-lime mr-2 sm:mr-3 text-sm sm:text-lg"></i>
-                                <span class="text-solar-forest font-medium text-sm sm:text-base">Add New Client User</span>
-                            </a>
-                            <a href="{{ url_for('admin_add_installation') }}" class="flex items-center p-3 sm:p-4 bg-gradient-to-r from-solar-teal-50 to-solar-emerald-50 rounded-lg hover:from-solar-teal-100 hover:to-solar-emerald-100 transition duration-300 border border-solar-teal-200">
-                                <i class="fas fa-solar-panel text-solar-teal mr-2 sm:mr-3 text-sm sm:text-lg"></i>
-                                <span class="text-solar-forest font-medium text-sm sm:text-base">Schedule Installation</span>
-                            </a>
-                            <a href="{{ url_for('admin_analytics') }}" class="flex items-center p-3 sm:p-4 bg-gradient-to-r from-solar-yellow-50 to-solar-lime-50 rounded-lg hover:from-solar-yellow-100 hover:to-solar-lime-100 transition duration-300 border border-solar-yellow-200">
-                                <i class="fas fa-chart-line text-solar-yellow mr-2 sm:mr-3 text-sm sm:text-lg"></i>
-                                <span class="text-solar-forest font-medium text-sm sm:text-base">View Analytics</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- System Status -->
-            <div class="mt-8 bg-white shadow-xl rounded-xl border-t-4 border-solar-teal">
-                <div class="px-6 py-4 border-b border-solar-teal-100">
-                    <h3 class="text-lg font-medium text-solar-forest flex items-center">
-                        <i class="fas fa-server text-solar-teal mr-2"></i>
-                        System Status
-                    </h3>
-                </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="flex items-center p-3 bg-solar-emerald-50 rounded-lg">
-                            <div class="w-4 h-4 bg-solar-emerald rounded-full mr-3 animate-pulse"></div>
-                            <span class="text-sm text-solar-forest font-medium">Database: Connected</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-solar-lime-50 rounded-lg">
-                            <div class="w-4 h-4 bg-solar-lime rounded-full mr-3 animate-pulse"></div>
-                            <span class="text-sm text-solar-forest font-medium">Email Service: Active</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-solar-teal-50 rounded-lg">
-                            <div class="w-4 h-4 bg-solar-teal rounded-full mr-3 animate-pulse"></div>
-                            <span class="text-sm text-solar-forest font-medium">Backup: Up to date</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Client Users List -->
-            <div class="mt-8">
-                <div class="bg-white shadow-2xl overflow-hidden rounded-2xl border border-gray-100">
-                    <div class="px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-green-50">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="bg-gradient-to-r from-solar-green to-green-600 p-2 rounded-lg mr-3">
-                                    <i class="fas fa-list text-white"></i>
-                                </div>
-                                <h3 class="text-xl font-bold text-gray-800">
-                                    Recent Client Users 
-                                    <span class="bg-gradient-to-r from-solar-green to-green-600 text-white px-3 py-1 rounded-full text-sm ml-2">
-                                        {{ customers|length if customers else 0 }} clients
-                                    </span>
-                                </h3>
-                            </div>
-                            <a href="{{ url_for('admin_customers') }}" class="bg-gradient-to-r from-solar-green to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-solar-green transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
-                                <i class="fas fa-eye mr-2"></i>
-                                View All
-                            </a>
-                        </div>
-                    </div>
-                    
-                    {% if customers %}
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gradient-to-r from-gray-50 to-green-50">
-                                <tr>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                        <i class="fas fa-user mr-2 text-solar-green"></i>Client
-                                    </th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                        <i class="fas fa-envelope mr-2 text-solar-green"></i>Contact
-                                    </th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                        <i class="fas fa-calendar mr-2 text-solar-yellow"></i>Created
-                                    </th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                        <i class="fas fa-cogs mr-2 text-gray-600"></i>Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-100">
-                                {% for customer in customers[:5] %}
-                                <tr class="hover:bg-gradient-to-r hover:from-green-50 hover:to-blue-50 transition-all duration-300 group">
-                                    <td class="px-6 py-6 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-12 w-12">
-                                                <div class="h-12 w-12 rounded-full bg-gradient-to-r from-solar-green to-green-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                                    <span class="text-sm font-medium">
-                                                        {% if customer.first_name and customer.last_name %}
-                                                            {{ customer.first_name[0] }}{{ customer.last_name[0] }}
-                                                        {% else %}
-                                                            {{ customer.email[0].upper() }}
-                                                        {% endif %}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    {% if customer.first_name and customer.last_name %}
-                                                        {{ customer.first_name }} {{ customer.last_name }}
-                                                    {% else %}
-                                                        {{ customer.email }}
-                                                    {% endif %}
-                                                </div>
-                                                <div class="text-sm text-gray-500">
-                                                    ID: #{{ customer.id }} | @{{ customer.email.split('@')[0] }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ customer.email }}</div>
-                                        <div class="text-sm text-gray-500">{{ customer.phone or 'No phone' }}</div>
-                                    </td>
-                                    <td class="px-6 py-6 whitespace-nowrap text-sm text-gray-500">
-                                        {{ customer.created_at.strftime('%b %d, %Y') if customer.created_at else 'N/A' }}
-                                    </td>
-                                    <td class="px-6 py-6 whitespace-nowrap text-sm font-medium">
-                                        <div class="flex space-x-2">
-                                            <a href="{{ url_for('admin_edit_customer', customer_id=customer.id) }}" class="text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 p-2 rounded-lg transition-colors duration-300">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="{{ url_for('admin_delete_customer', customer_id=customer.id) }}" class="text-red-600 hover:text-red-900 bg-red-100 hover:bg-red-200 p-2 rounded-lg transition-colors duration-300" onclick="return confirm('Are you sure you want to delete this client?')">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <div class="p-8 text-center">
-                        <div class="text-gray-400 mb-4">
-                            <i class="fas fa-users text-4xl"></i>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">No clients yet</h3>
-                        <p class="text-gray-500 mb-4">Start by adding your first client to the system.</p>
-                        <a href="{{ url_for('admin_add_customer') }}" class="bg-gradient-to-r from-solar-green to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-solar-green transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 inline-flex items-center">
-                            <i class="fas fa-user-plus mr-2"></i>
-                            Add First Client
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
+            <div>
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-solar-emerald to-solar-teal bg-clip-text text-transparent">Admin Dashboard</h1>
+                <p class="text-sm sm:text-base lg:text-lg text-gray-600 mt-2">Overview of system activity and performance</p>
             </div>
         </div>
     </div>
 
-    <!-- Notification Panel -->
-    <div id="notificationPanel" class="fixed top-20 right-4 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 hidden">
-        <div class="p-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-900">Notifications</h3>
-                <button id="closeNotifications" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times"></i>
-                </button>
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-8">
+        <!-- Total Clients -->
+        <div class="bg-white rounded-xl shadow-lg border-b-4 border-solar-blue p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <i class="fas fa-users text-solar-blue text-xl"></i>
+                </div>
+                <span class="text-solar-blue font-bold">+5%</span>
             </div>
+            <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Total Clients</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ clients|length }}</p>
+            <p class="text-xs text-gray-500 mt-2">Active accounts</p>
         </div>
-        <div class="p-4 max-h-96 overflow-y-auto">
-            <div class="space-y-3">
-                <div class="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <i class="fas fa-exclamation-triangle text-yellow-500 mt-1"></i>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">3 Pending Quotes</p>
-                        <p class="text-xs text-gray-600">New quotes require your review</p>
-                    </div>
+
+        <!-- Total Quotes -->
+        <div class="bg-white rounded-xl shadow-lg border-b-4 border-solar-green p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-green-100 p-3 rounded-full">
+                    <i class="fas fa-file-invoice-dollar text-solar-green text-xl"></i>
                 </div>
-                <div class="flex items-start space-x-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">Installation Completed</p>
-                        <p class="text-xs text-gray-600">Project #1234 finished successfully</p>
-                    </div>
-                </div>
-                <div class="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <i class="fas fa-user-plus text-blue-500 mt-1"></i>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">New Customer</p>
-                        <p class="text-xs text-gray-600">John Doe registered today</p>
-                    </div>
-                </div>
+                <span class="text-solar-green font-bold">+12%</span>
             </div>
+            <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Total Quotes</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ quotes|length }}</p>
+            <p class="text-xs text-gray-500 mt-2">All time requests</p>
+        </div>
+
+        <!-- Pending Quotes -->
+        <div class="bg-white rounded-xl shadow-lg border-b-4 border-solar-yellow p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-yellow-100 p-3 rounded-full">
+                    <i class="fas fa-clock text-solar-yellow text-xl"></i>
+                </div>
+                <span class="text-solar-yellow font-bold">Action Needed</span>
+            </div>
+            <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Pending Quotes</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ quotes|selectattr('status', 'equalto', 'pending')|list|length }}</p>
+            <p class="text-xs text-gray-500 mt-2">Awaiting review</p>
+        </div>
+
+        <!-- Completed Installations -->
+        <div class="bg-white rounded-xl shadow-lg border-b-4 border-solar-orange p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-orange-100 p-3 rounded-full">
+                    <i class="fas fa-tools text-solar-orange text-xl"></i>
+                </div>
+                <span class="text-solar-orange font-bold">+8%</span>
+            </div>
+            <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Installations</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ installations|selectattr('status', 'equalto', 'completed')|list|length }}</p>
+            <p class="text-xs text-gray-500 mt-2">Successfully completed</p>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu functionality
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const sidebar = document.getElementById('sidebar');
-            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-
-            if (mobileMenuBtn && sidebar) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    sidebar.classList.remove('hidden');
-                    sidebar.classList.add('fixed', 'top-0', 'left-0', 'z-40', 'w-64');
-                });
-            }
-
-            if (closeSidebarBtn && sidebar) {
-                closeSidebarBtn.addEventListener('click', function() {
-                    sidebar.classList.add('hidden');
-                    sidebar.classList.remove('fixed', 'top-0', 'left-0', 'z-40', 'w-64');
-                });
-            }
-
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth < 1024) { // lg breakpoint
-                    if (!sidebar.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
-                        sidebar.classList.add('hidden');
-                        sidebar.classList.remove('fixed', 'top-0', 'left-0', 'z-40', 'w-64');
-                    }
-                }
-            });
-
-            // Counter animation
-            function animateCounters() {
-                const counters = document.querySelectorAll('.counter');
-                counters.forEach(counter => {
-                    const target = parseInt(counter.getAttribute('data-target'));
-                    const duration = 2000; // 2 seconds
-                    const increment = target / (duration / 16); // 60fps
-                    let current = 0;
-                    
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            current = target;
-                            clearInterval(timer);
-                        }
-                        counter.textContent = Math.floor(current);
-                    }, 16);
-                });
-            }
-
-            // Start counter animation after a short delay
-            setTimeout(animateCounters, 500);
-
-            // Notification panel functionality
-            const notificationsBtn = document.getElementById('notificationsBtn');
-            const notificationPanel = document.getElementById('notificationPanel');
-            const closeNotifications = document.getElementById('closeNotifications');
-            const notificationBadge = document.getElementById('notificationBadge');
-
-            notificationsBtn.addEventListener('click', function() {
-                notificationPanel.classList.toggle('hidden');
-                if (!notificationPanel.classList.contains('hidden')) {
-                    notificationBadge.classList.add('hidden');
-                }
-            });
-
-            closeNotifications.addEventListener('click', function() {
-                notificationPanel.classList.add('hidden');
-            });
-
-            // Close notification panel when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!notificationsBtn.contains(event.target) && !notificationPanel.contains(event.target)) {
-                    notificationPanel.classList.add('hidden');
-                }
-            });
-
-            // Refresh functionality
-            const refreshBtn = document.getElementById('refreshBtn');
-            const lastUpdated = document.getElementById('lastUpdated');
-
-            refreshBtn.addEventListener('click', function() {
-                const icon = refreshBtn.querySelector('i');
-                icon.classList.add('fa-spin');
-                
-                // Simulate refresh
-                setTimeout(() => {
-                    icon.classList.remove('fa-spin');
-                    lastUpdated.textContent = new Date().toLocaleString();
-                    
-                    // Show success message
-                    showToast('Data refreshed successfully!', 'success');
-                }, 1500);
-            });
-
-            // Toast notification system
-            function showToast(message, type = 'info') {
-                const toast = document.createElement('div');
-                toast.className = `fixed top-4 left-1/2 transform -translate-x-1/2 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 translate-y-[-100px]`;
-                
-                const colors = {
-                    'success': 'bg-green-500 text-white',
-                    'error': 'bg-red-500 text-white',
-                    'warning': 'bg-yellow-500 text-white',
-                    'info': 'bg-blue-500 text-white'
-                };
-                
-                toast.className += ` ${colors[type]}`;
-                toast.innerHTML = `
-                    <div class="flex items-center">
-                        <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle mr-2"></i>
-                        <span>${message}</span>
+    <!-- Recent Activity Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Recent Quotes -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-file-signature text-solar-blue mr-2"></i>
+                    Recent Quotes
+                </h3>
+                <a href="{{ url_for('admin_quotes') }}" class="text-sm text-solar-blue hover:underline font-medium">View All</a>
+            </div>
+            <div class="divide-y divide-gray-100">
+                {% for quote in quotes[:5] %}
+                <div class="p-4 hover:bg-gray-50 transition duration-150">
+                    <div class="flex items-center justify-between pointer-events-none">
+                        <div class="flex items-center">
+                            <div class="bg-blue-50 text-solar-blue w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3 text-sm">
+                                {{ quote.first_name[0] if quote.first_name else '?' }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900">{{ quote.first_name }} {{ quote.last_name }}</p>
+                                <p class="text-xs text-gray-500">{{ quote.created_at.strftime('%Y-%m-%d') }} • {{ quote.property_type.title() }}</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full
+                            {% if quote.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% elif quote.status == 'approved' %}bg-green-100 text-green-800
+                            {% elif quote.status == 'rejected' %}bg-red-100 text-red-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ quote.status.title() }}
+                        </span>
                     </div>
-                `;
-                
-                document.body.appendChild(toast);
-                
-                // Animate in
-                setTimeout(() => {
-                    toast.classList.remove('translate-y-[-100px]');
-                }, 100);
-                
-                // Auto remove after 3 seconds
-                setTimeout(() => {
-                    toast.classList.add('translate-y-[-100px]');
-                    setTimeout(() => {
-                        if (toast.parentElement) {
-                            toast.remove();
-                        }
-                    }, 300);
-                }, 3000);
-            }
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 
-            // Add hover effects to cards
-            const cards = document.querySelectorAll('.hover-lift');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
-
-            // Real-time updates simulation
-            setInterval(() => {
-                // Simulate real-time data updates
-                const randomUpdate = Math.random();
-                if (randomUpdate > 0.95) { // 5% chance every 5 seconds
-                    showToast('New data available', 'info');
-                }
-            }, 5000);
-
-            // Search functionality for tables
-            function addSearchFunctionality() {
-                const tables = document.querySelectorAll('table');
-                tables.forEach(table => {
-                    const searchInput = document.createElement('input');
-                    searchInput.type = 'text';
-                    searchInput.placeholder = 'Search...';
-                    searchInput.className = 'mb-4 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-solar-emerald';
-                    
-                    const tableContainer = table.closest('.overflow-x-auto');
-                    if (tableContainer) {
-                        tableContainer.parentElement.insertBefore(searchInput, tableContainer);
-                        
-                        searchInput.addEventListener('input', function() {
-                            const searchTerm = this.value.toLowerCase();
-                            const rows = table.querySelectorAll('tbody tr');
-                            
-                            rows.forEach(row => {
-                                const text = row.textContent.toLowerCase();
-                                if (text.includes(searchTerm)) {
-                                    row.style.display = '';
-                                } else {
-                                    row.style.display = 'none';
-                                }
-                            });
-                        });
-                    }
-                });
-            }
-
-            // Initialize search functionality
-            addSearchFunctionality();
-
-            // Add loading states to buttons
-            const actionButtons = document.querySelectorAll('a[href*="admin_"]');
-            actionButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const icon = this.querySelector('i');
-                    if (icon) {
-                        icon.classList.add('fa-spin');
-                        setTimeout(() => {
-                            icon.classList.remove('fa-spin');
-                        }, 1000);
-                    }
-                });
-            });
-
-            // Initialize tooltips
-            function initTooltips() {
-                const tooltipElements = document.querySelectorAll('[data-tooltip]');
-                tooltipElements.forEach(element => {
-                    element.addEventListener('mouseenter', function() {
-                        const tooltip = document.createElement('div');
-                        tooltip.className = 'absolute z-50 px-2 py-1 text-sm text-white bg-gray-800 rounded shadow-lg';
-                        tooltip.textContent = this.getAttribute('data-tooltip');
-                        tooltip.style.top = this.offsetTop - 30 + 'px';
-                        tooltip.style.left = this.offsetLeft + 'px';
-                        document.body.appendChild(tooltip);
-                        this._tooltip = tooltip;
-                    });
-                    
-                    element.addEventListener('mouseleave', function() {
-                        if (this._tooltip) {
-                            this._tooltip.remove();
-                            this._tooltip = null;
-                        }
-                    });
-                });
-            }
-
-            initTooltips();
-
-            // Add keyboard shortcuts
-            document.addEventListener('keydown', function(event) {
-                // Ctrl + R for refresh
-                if (event.ctrlKey && event.key === 'r') {
-                    event.preventDefault();
-                    refreshBtn.click();
-                }
-                
-                // Escape to close notifications
-                if (event.key === 'Escape') {
-                    notificationPanel.classList.add('hidden');
-                }
-            });
-
-            // Performance monitoring
-            const performanceObserver = new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                    if (entry.entryType === 'navigation') {
-                        console.log('Page load time:', entry.loadEventEnd - entry.loadEventStart, 'ms');
-                    }
-                }
-            });
-            
-            if (window.PerformanceObserver) {
-                performanceObserver.observe({ entryTypes: ['navigation'] });
-            }
-
-            // Update timestamp function
-            function updateTimestamp() {
-                const now = new Date();
-                const options = { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: '2-digit', 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                };
-                const formattedDate = now.toLocaleDateString('en-US', options);
-                document.getElementById('lastUpdated').textContent = formattedDate;
-            }
-
-            // Initialize timestamp
-            updateTimestamp();
-
-            // Refresh button functionality (already handled above)
-
-            // Update timestamp every minute
-            setInterval(updateTimestamp, 60000);
-        });
-    </script>
-</body>
-</html>
+        <!-- Recent Users -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-users text-solar-green mr-2"></i>
+                    New Clients
+                </h3>
+                <a href="{{ url_for('admin_customers') }}" class="text-sm text-solar-green hover:underline font-medium">View All</a>
+            </div>
+            <div class="divide-y divide-gray-100">
+                {% for client in clients[:5] %}
+                <div class="p-4 hover:bg-gray-50 transition duration-150">
+                    <div class="flex items-center justify-between pointer-events-none">
+                        <div class="flex items-center">
+                            <div class="bg-green-50 text-solar-green w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3 text-sm">
+                                {{ client.first_name[0] if client.first_name else '?' }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900">{{ client.first_name }} {{ client.last_name }}</p>
+                                <p class="text-xs text-gray-500">{{ client.email }}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-400">
+                            <i class="fas fa-clock mr-1"></i>
+                            {{ client.created_at.strftime('%Y-%m-%d') }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

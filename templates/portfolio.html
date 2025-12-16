@@ -96,7 +96,7 @@
                 <div class="portfolio-item bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group" data-category="{{ item.category or 'installation' }}">
                     <div class="relative overflow-hidden">
                         {% if item.image_url %}
-                            <img src="{{ url_for('static', filename='uploads/' + item.image_url.split('/')[-1]) }}" alt="{{ item.title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <img src="{{ url_for('static', filename='uploads/' + item.image_url.split('/')[-1]) }}" alt="{{ item.title }}" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300">
                         {% else %}
                             <div class="w-full h-48 bg-gradient-to-br from-solar-green to-solar-blue flex items-center justify-center">
                                 <i class="fas fa-solar-panel text-white text-4xl"></i>
@@ -237,7 +237,7 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-16 bg-gradient-to-r from-solar-green to-solar-blue text-white">
+<section class="py-16 bg-teal-600 text-white">
     <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Ready to Join Our Success Stories?</h2>
         <p class="text-base sm:text-lg mb-8 max-w-2xl mx-auto">Let us design a custom solar solution that meets your energy needs and budget.</p>
