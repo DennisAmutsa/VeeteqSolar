@@ -1,125 +1,128 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Manage Products - Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50">
+<div class="max-w-full">
     <!-- Admin Header -->
-    <div class="bg-white shadow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-6">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Product Management</h1>
-                    <p class="text-gray-600">Manage your solar product catalog</p>
+    <div class="mb-6 sm:mb-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
+            <div class="flex items-center">
+                <div class="bg-gradient-to-r from-solar-orange to-orange-600 p-2 sm:p-3 rounded-xl mr-3 shadow-lg">
+                    <i class="fas fa-box text-white text-xl sm:text-2xl"></i>
                 </div>
-                <a href="{{ url_for('admin_add_product') }}" class="bg-solar-orange text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition duration-300 font-semibold">
-                    <i class="fas fa-plus mr-2"></i>
-                    Add New Product
-                </a>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-solar-orange to-orange-600 bg-clip-text text-transparent">Product Management</h1>
+                    <p class="text-sm sm:text-base text-gray-600 mt-1">Manage your solar product catalog</p>
+                </div>
             </div>
+            <a href="{{ url_for('admin_add_product') }}" class="bg-gradient-to-r from-solar-orange to-orange-600 text-white px-6 py-3 rounded-xl hover:from-orange-600 hover:to-solar-orange transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
+                <i class="fas fa-plus mr-2"></i>
+                Add New Product
+            </a>
         </div>
     </div>
 
     <!-- Products Table -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="bg-white shadow rounded-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-800">All Products ({{ products|length }})</h2>
-            </div>
-            
-            {% if products %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Specs</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for product in products %}
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="h-12 w-12 flex-shrink-0">
-                                        <img class="h-12 w-12 rounded-lg object-cover" src="{{ product.image_url }}" alt="{{ product.name }}" onerror="this.src='/static/uploads/placeholder.jpg'">
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
-                                        <div class="text-sm text-gray-500">{{ product.manufacturer }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {% if product.category == 'panels' %}bg-blue-100 text-blue-800
-                                    {% elif product.category == 'inverters' %}bg-green-100 text-green-800
-                                    {% elif product.category == 'batteries' %}bg-yellow-100 text-yellow-800
-                                    {% elif product.category == 'mounting' %}bg-purple-100 text-purple-800
-                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                    {{ product.category.title() }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <div class="space-y-1">
-                                    {% if product.wattage > 0 %}
-                                    <div><span class="text-gray-500">Power:</span> {{ product.wattage }}W</div>
-                                    {% endif %}
-                                    {% if product.efficiency > 0 %}
-                                    <div><span class="text-gray-500">Efficiency:</span> {{ product.efficiency }}%</div>
-                                    {% endif %}
-                                    {% if product.warranty_years > 0 %}
-                                    <div><span class="text-gray-500">Warranty:</span> {{ product.warranty_years }} years</div>
-                                    {% endif %}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="text-lg font-bold text-solar-orange">KSh {{ "%.0f"|format(product.price) }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center space-x-2">
-                                    <button onclick="viewProduct({{ product.id }})" class="text-solar-blue hover:text-blue-600 transition duration-300">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <form method="POST" action="{{ url_for('admin_delete_product', product_id=product.id) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                        <button type="submit" class="text-red-600 hover:text-red-800 transition duration-300">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="text-center py-12">
-                <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">No Products Yet</h3>
-                <p class="text-gray-500 mb-6">Start building your product catalog by adding your first product.</p>
-                <a href="{{ url_for('admin_add_product') }}" class="bg-solar-orange text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition duration-300 font-semibold">
-                    <i class="fas fa-plus mr-2"></i>
-                    Add First Product
-                </a>
-            </div>
-            {% endif %}
+    <div class="bg-white shadow-2xl overflow-hidden rounded-2xl border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-orange-50">
+            <h2 class="text-xl font-bold text-gray-800">All Products ({{ products|length }})</h2>
         </div>
+        
+        {% if products %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gradient-to-r from-gray-50 to-orange-50">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Product</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Category</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Specs</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Price</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                    {% for product in products %}
+                    <tr class="hover:bg-gradient-to-r hover:from-orange-50 hover:to-gray-50 transition-all duration-300">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="h-12 w-12 flex-shrink-0">
+                                    <img class="h-12 w-12 rounded-lg object-cover shadow-sm" src="{{ product.image_url }}" alt="{{ product.name }}" onerror="this.src='/static/uploads/placeholder.jpg'">
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
+                                    <div class="text-sm text-gray-500">{{ product.manufacturer }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                {% if product.category == 'panels' %}bg-blue-100 text-blue-800
+                                {% elif product.category == 'inverters' %}bg-green-100 text-green-800
+                                {% elif product.category == 'batteries' %}bg-yellow-100 text-yellow-800
+                                {% elif product.category == 'mounting' %}bg-purple-100 text-purple-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ product.category.title() }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            <div class="space-y-1">
+                                {% if product.wattage > 0 %}
+                                <div><span class="font-medium text-gray-500">Power:</span> {{ product.wattage }}W</div>
+                                {% endif %}
+                                {% if product.efficiency > 0 %}
+                                <div><span class="font-medium text-gray-500">Eff:</span> {{ product.efficiency }}%</div>
+                                {% endif %}
+                                {% if product.warranty_years > 0 %}
+                                <div><span class="font-medium text-gray-500">Warranty:</span> {{ product.warranty_years }}y</div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="text-lg font-bold text-solar-orange">KSh {{ "%.0f"|format(product.price) }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex items-center space-x-3">
+                                <button onclick="viewProduct({{ product.id }})" class="text-solar-blue hover:text-blue-700 transition duration-300 bg-blue-50 p-2 rounded-lg" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <form method="POST" action="{{ url_for('admin_delete_product', product_id=product.id) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this product?')">
+                                    <button type="submit" class="text-red-500 hover:text-red-700 transition duration-300 bg-red-50 p-2 rounded-lg" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-16">
+            <div class="bg-gray-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-box-open text-5xl text-gray-300"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">No Products Yet</h3>
+            <p class="text-gray-500 mb-8 max-w-md mx-auto">Start building your product catalog by adding your first solar product.</p>
+            <a href="{{ url_for('admin_add_product') }}" class="bg-solar-orange text-white px-8 py-3 rounded-xl hover:bg-orange-600 transition duration-300 font-semibold shadow-lg">
+                <i class="fas fa-plus mr-2"></i>
+                Add First Product
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 
 <!-- Product View Modal -->
-<div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+<div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[60] backdrop-blur-sm transition-opacity duration-300">
     <div class="flex items-center justify-center min-h-screen px-4">
-        <div class="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-100">
             <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">Product Details</h3>
-                    <button onclick="closeProductModal()" class="text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times text-xl"></i>
+                <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                    <h3 class="text-2xl font-bold text-gray-800 bg-gradient-to-r from-solar-orange to-orange-600 bg-clip-text text-transparent">Product Details</h3>
+                    <button onclick="closeProductModal()" class="text-gray-400 hover:text-red-500 transition-colors duration-300 bg-gray-50 hover:bg-red-50 p-2 rounded-full w-10 h-10 flex items-center justify-center">
+                        <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
                 <div id="productDetails">
@@ -134,35 +137,55 @@
 {% block scripts %}
 <script>
 function viewProduct(productId) {
-    // Simple product view - you can enhance this later
     const modal = document.getElementById('productModal');
     const details = document.getElementById('productDetails');
     
-    // Find the product row
+    // Find the product row logic (simplified for demo)
+    // In a real app, you might fetch details via AJAX
     const productRow = document.querySelector(`button[onclick="viewProduct(${productId})"]`).closest('tr');
     const productName = productRow.querySelector('.text-sm.font-medium').textContent;
     const category = productRow.querySelector('.rounded-full').textContent.trim();
     const price = productRow.querySelector('.text-lg.font-bold').textContent;
     
     details.innerHTML = `
-        <div class="text-center">
-            <h4 class="text-lg font-semibold mb-2">${productName}</h4>
-            <p class="text-gray-600 mb-2">Category: ${category}</p>
-            <p class="text-xl font-bold text-solar-orange">${price}</p>
-            <p class="text-sm text-gray-500 mt-4">Full product details can be enhanced here.</p>
+        <div class="text-center py-4">
+            <div class="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-solar-panel text-3xl text-solar-orange"></i>
+            </div>
+            <h4 class="text-2xl font-bold text-gray-800 mb-2">${productName}</h4>
+            <span class="px-4 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-600 mb-4 inline-block">${category}</span>
+            <div class="text-3xl font-bold text-solar-orange mb-6">${price}</div>
+            
+            <div class="bg-gray-50 rounded-xl p-4 text-left">
+                <h5 class="font-semibold text-gray-700 mb-2 border-b border-gray-200 pb-2">Quick Specs</h5>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-gray-500">Status:</span> <span class="text-green-600 font-medium">In Stock</span></div>
+                    <div><span class="text-gray-500">SKU:</span> <span class="text-gray-800 font-medium">PROD-${productId}</span></div>
+                </div>
+            </div>
         </div>
     `;
     
     modal.classList.remove('hidden');
+    // Animate in
+    modal.firstElementChild.classList.remove('opacity-0', 'scale-95');
 }
 
 function closeProductModal() {
-    document.getElementById('productModal').classList.add('hidden');
+    const modal = document.getElementById('productModal');
+    modal.classList.add('hidden');
 }
 
 // Close modal when clicking outside
 document.getElementById('productModal').addEventListener('click', function(e) {
     if (e.target === this) {
+        closeProductModal();
+    }
+});
+
+// Close on escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && !document.getElementById('productModal').classList.contains('hidden')) {
         closeProductModal();
     }
 });
